@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import requests
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import AgglomerativeClustering
@@ -10,9 +11,13 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import pairwise_distances
 from sklearn.manifold import TSNE
 
+# Downloading the data
+url = 'http://opendata.auth-6f31f706db6f4a24b55f42a6a79c5086.storage.sbg5.cloud.ovh.net/2019-03-21/ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv'
+req = requests.get(url)
+with open('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv', 'wb') as csv_file:
+    csv_file.write(req.content)
+
 # Comments loading
-df             = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
-comments       = df.iloc[:, 25]
 df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
 comments = df.iloc[:, 25]
 
@@ -74,6 +79,8 @@ agglo      = AgglomerativeClustering(
 )
 clusters   = agglo.fit_predict(comment_vectors)
 for cluster_id, cluster_size in zip(*np.unique(clusters, return_counts = True)):
+    # We are using using string formatting to align properly the
+    # displays.
     print(f'cluster {cluster_id} -> {cluster_size:4d} elements')
 
 quantile_cutoff        = .3 # The proportion of comments closest to
@@ -90,7 +97,7 @@ for cluster_id in range(n_clusters):
     # We select all the comments of the current cluster and their
     # corresponding tfidf vectors
     cluster_mask     = clusters == cluster_id
-    cluster_comments = selected_comments[cluster_mask]
+    cluster_comments = comments[cluster_mask]
     cluster_vectors  = comment_vectors[cluster_mask]
     # Compute the average of the cluster vector in order to use it
     # as "center"
@@ -114,3 +121,8 @@ for cluster_id in range(n_clusters):
     selected_vectors_list.append(cluster_vectors[comment_mask])
     selected_clusters_list.append(np.array([cluster_id] * len(selected_comments_list[-1])))
     print(cluster_repr, cutoff_value)
+
+for cluster_id, cluster_comments in enumerate(selected_comments_list):
+    print(f'#################### Cluster {cluster_id} -> {len(cluster_comments):4d} Elements ####################')
+    for comment in cluster_comments.sample(10, replace = True):
+        print(f'\t{comment}\n')
