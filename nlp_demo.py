@@ -13,6 +13,8 @@ from sklearn.manifold import TSNE
 # Comments loading
 df             = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
 comments       = df.iloc[:, 25]
+df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
+comments = df.iloc[:, 25]
 
 # Comments cleaning and selection
 empty_comments = comments.isnull()
