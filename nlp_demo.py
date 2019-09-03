@@ -21,24 +21,46 @@ empty_comments = comments.isnull()
 print(empty_comments.sum() / len(comments))
 comments       = comments[~empty_comments]
 
-comments_len   = comments.str.len()
+# Removing long comments
+# Computes for each comment its number of character.
+comments_len = comments.str.len()
+# np.arange(0, 1.1, .1) creates an array with values going from 0 to 1
+# by increment of .1. To compute the quantile, pandas Series already
+# have a method that takes an array of quantiles as parameter. We use
+# .iteritems to iterate both on the quantile and its corresponding
+# value.
 for q, length in comments_len.quantile(np.arange(0, 1.1, .1)).iteritems():
+    # {q:3.1f} is used to avoid display floating point numbers round
+    # errors like 0.30000000000000004.
     print(f'Quantile {q:3.1f} -> length {length}')
 
 comments = comments[comments_len < comments_len.quantile(.9)]
+# We sample a few comments and print them.
+print(*comments.sample(10), sep = '\n\n')
+
+# comments = comments.sample(1000)
 
 # Vectorizing comments using TF-IDF
-tfidf = TfidfVectorizer(min_df = 10)
+# First we create the vectorizer
+tfidf           = TfidfVectorizer(min_df = 10, strip_accents = 'unicode')
+# Then we use it to compute the array of vectors corresponding to each
+# of the comments.
 comment_vectors = tfidf.fit_transform(comments)
+# We then convert this sparse array to a dense one because it is
+# needed for later processing.
 comment_vectors = comment_vectors.toarray()
 print(comment_vectors.shape)
 
 # Removing comments that correspond to empty tfidf vectors.
+# First we find all the lines in which all the values are 0
 empty_vector_mask = np.all(comment_vectors == 0, axis = 1)
+# We remove the corresponding comments
 comments          = comments[~empty_vector_mask]
+# And we also remove these vectors from the vector array.
 comment_vectors   = comment_vectors[~empty_vector_mask]
 print(comment_vectors.shape)
 
+# Reducing the number of dimensions using Principal Component Analysis
 variance_kept   = .90
 pca             = PCA(n_components = variance_kept)
 comment_vectors = pca.fit_transform(comment_vectors)
