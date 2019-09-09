@@ -12,6 +12,10 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import pairwise_distances
 from sklearn.manifold import TSNE
 
+import umap
+
+seed = 142857
+
 # Downloading the data
 # url = 'http://opendata.auth-6f31f706db6f4a24b55f42a6a79c5086.storage.sbg5.cloud.ovh.net/2019-03-21/ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv'
 # req = requests.get(url)
@@ -21,7 +25,8 @@ from sklearn.manifold import TSNE
 # Comments loading
 df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
 comments = df.iloc[:, 25]
-comments = comments.sample(10000)
+print(len(comments))
+comments = comments.sample(15000, random_state = seed)
 
 # Comments cleaning and selection
 empty_comments = comments.isnull()
@@ -85,7 +90,7 @@ for cluster_id, cluster_size in zip(*np.unique(clusters, return_counts = True)):
     # displays.
     print(f'cluster {cluster_id} -> {cluster_size:4d} elements')
 
-quantile_cutoff        = .3 # The proportion of comments closest to
+quantile_cutoff        = .5 # The proportion of comments closest to
                             # the center we will keep for the final
                             # figure.
 cluster_reprs          = [] # The most representative comment of the
@@ -131,7 +136,7 @@ cluster_reprs           = np.array(cluster_reprs)
 
 for cluster_id, cluster_comments in enumerate(selected_comments_list):
     print(f'#################### Cluster {cluster_id} -> {len(cluster_comments):4d} Elements ####################')
-    for comment in cluster_comments.sample(10, replace = True):
+    for comment in cluster_comments.sample(10, replace = True, random_state = seed):
         print(f'\t{comment}\n')
 
 
