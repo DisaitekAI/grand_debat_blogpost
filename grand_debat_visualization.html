@@ -47,12 +47,14 @@
          var makeVis = function(data) {
              // Common pattern for defining vis size and margins
              var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-                 width  = 960 - margin.left - margin.right,
-                 height = 500 - margin.top - margin.bottom;
+                 /* width  = 960 - margin.left - margin.right,
+                  * height = 500 - margin.top - margin.bottom; */
+                 width  = 1600 - margin.left - margin.right,
+                 height = 1000 - margin.top - margin.bottom;
 
-              // Add the visualization svg canvas to the vis-container <div>
-              var canvas = d3.select("#vis-container").append("svg")
-                  .attr("width",  width  + margin.left + margin.right)
+             // Add the visualization svg canvas to the vis-container <div>
+             var canvas = d3.select("#vis-container").append("svg")
+                            .attr("width",  width  + margin.left + margin.right)
                   .attr("height", height + margin.top  + margin.bottom)
                   .append("g")
                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
