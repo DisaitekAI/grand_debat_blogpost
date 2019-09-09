@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import requests
+from collections import OrderedDict
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import AgglomerativeClustering
@@ -147,16 +148,6 @@ cluster_colors      = np.array([
     'plum'
 ])
 
-# plt.figure(figsize = (15, 15))
-# plt.scatter(
-#     comments_tsne_vects[:, 0],
-#     comments_tsne_vects[:, 1,],
-#     alpha = alpha,
-#     c     = cluster_colors[clusters_final]
-# )
-# plt.axis('off')
-# plt.show()
-
 cluster_coords = []
 for cluster_id in range(n_clusters):
     cluster_vects      = comment_vectors_final[clusters_final == cluster_id]
@@ -177,23 +168,26 @@ cluster_shifts = np.array([
 ])
 figure_comment_coords = cluster_shifts[clusters_final] + cluster_coords
 
-plt.figure(figsize = (15, 15))
-for cluster_id, (shift_x, shift_y) in zip(range(n_clusters), cluster_shifts):
-    cluster_coord = figure_comment_coords[clusters_final == cluster_id]
-    plt.scatter(
-        x     = cluster_coord[:, 0],
-        y     = cluster_coord[:, 1],
-        alpha = alpha,
-        c     = cluster_colors[cluster_id]
-    )
-plt.axis('off')
-plt.show()
+# plt.figure(figsize = (15, 15))
+# for cluster_id, (shift_x, shift_y) in zip(range(n_clusters), cluster_shifts):
+#     cluster_coord = figure_comment_coords[clusters_final == cluster_id]
+#     plt.scatter(
+#         x     = cluster_coord[:, 0],
+#         y     = cluster_coord[:, 1],
+#         alpha = alpha,
+#         c     = cluster_colors[cluster_id]
+#     )
+# plt.axis('off')
+# plt.show()
 
-csv_dict = OrderedDict([
-    ('comment', selected_comments_final),
-    ('cluster', clusters_final),
-    ('cluster_name', cluster_reprs[clusters_final]),
-    ('x', 5)
+df_dict = OrderedDict([
+    ('comment'      , selected_comments_final),
+    ('cluster'      , clusters_final),
+    ('cluster_name' , cluster_reprs[clusters_final]),
+    ('x'            , figure_comment_coords[:, 0]),
+    ('y'            , figure_comment_coords[:, 1]),
 ])
+df = pd.DataFrame.from_dict(df_dict)
+df.to_csv('grand_debat_comments.csv', index = False)
 
 pdb.set_trace()
