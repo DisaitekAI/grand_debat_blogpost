@@ -20,6 +20,7 @@ from sklearn.manifold import TSNE
 # Comments loading
 df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
 comments = df.iloc[:, 25]
+comments = comments.sample(10000)
 
 # Comments cleaning and selection
 empty_comments = comments.isnull()
@@ -122,7 +123,37 @@ for cluster_id in range(n_clusters):
     selected_clusters_list.append(np.array([cluster_id] * len(selected_comments_list[-1])))
     print(cluster_repr, cutoff_value)
 
+selected_comments_final = pd.concat(selected_comments_list)
+comment_vectors_final   = np.concatenate(selected_vectors_list, axis = 0)
+clusters_final          = np.concatenate(selected_clusters_list, axis = 0)
+
 for cluster_id, cluster_comments in enumerate(selected_comments_list):
     print(f'#################### Cluster {cluster_id} -> {len(cluster_comments):4d} Elements ####################')
     for comment in cluster_comments.sample(10, replace = True):
         print(f'\t{comment}\n')
+
+comments_tsne_vects = TSNE(n_components = 2, metric = 'cosine').fit_transform(comment_vectors_final)
+tsne_mean           = comments_tsne_vects.mean(axis = 0)
+tsne_std            = comments_tsne_vects.std(axis = 0)
+comments_tsne_vects = (comments_tsne_vects - tsne_mean) / tsne_std
+alpha               = .3
+cluster_colors      = np.array([
+    'magenta',
+    'darkblue',
+    'darkgreen',
+    'orangered',
+    'sienna',
+    'plum'
+])
+
+plt.figure(figsize = (15, 15))
+plt.scatter(
+    comments_tsne_vects[:, 0],
+    comments_tsne_vects[:, 1,],
+    alpha = alpha,
+    c     = cluster_colors[clusters_final]
+)
+plt.axis('off')
+plt.show()
+
+pdb.set_trace()
