@@ -26,7 +26,7 @@ seed = 142857
 df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
 comments = df.iloc[:, 25]
 print(len(comments))
-comments = comments.sample(15000, random_state = seed)
+# comments = comments.sample(15000, random_state = seed)
 
 # Comments cleaning and selection
 empty_comments = comments.isnull()
@@ -90,7 +90,7 @@ for cluster_id, cluster_size in zip(*np.unique(clusters, return_counts = True)):
     # displays.
     print(f'cluster {cluster_id} -> {cluster_size:4d} elements')
 
-quantile_cutoff        = .5 # The proportion of comments closest to
+quantile_cutoff        = 1 # The proportion of comments closest to
                             # the center we will keep for the final
                             # figure.
 cluster_reprs          = [] # The most representative comment of the
