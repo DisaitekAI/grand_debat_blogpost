@@ -12,10 +12,10 @@ from sklearn.metrics import pairwise_distances
 from sklearn.manifold import TSNE
 
 # Downloading the data
-url = 'http://opendata.auth-6f31f706db6f4a24b55f42a6a79c5086.storage.sbg5.cloud.ovh.net/2019-03-21/ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv'
-req = requests.get(url)
-with open('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv', 'wb') as csv_file:
-    csv_file.write(req.content)
+# url = 'http://opendata.auth-6f31f706db6f4a24b55f42a6a79c5086.storage.sbg5.cloud.ovh.net/2019-03-21/ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv'
+# req = requests.get(url)
+# with open('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv', 'wb') as csv_file:
+#     csv_file.write(req.content)
 
 # Comments loading
 df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
