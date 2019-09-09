@@ -118,7 +118,7 @@ for cluster_id in range(n_clusters):
     # To clean the comments that we will display, we cut from each cluster
     # the comments that are the furthest away from the center
     cutoff_value = np.quantile(dist_to_center, quantile_cutoff)
-    comment_mask = dist_to_center < cutoff_value
+    comment_mask = dist_to_center <= cutoff_value
     selected_comments_list.append(cluster_comments.iloc[comment_mask])
     selected_vectors_list.append(cluster_vectors[comment_mask])
     selected_clusters_list.append(np.array([cluster_id] * len(selected_comments_list[-1])))
