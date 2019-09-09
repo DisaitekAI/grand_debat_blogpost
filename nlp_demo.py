@@ -134,19 +134,6 @@ for cluster_id, cluster_comments in enumerate(selected_comments_list):
     for comment in cluster_comments.sample(10, replace = True):
         print(f'\t{comment}\n')
 
-comments_tsne_vects = TSNE(n_components = 2, metric = 'cosine').fit_transform(comment_vectors_final)
-tsne_mean           = comments_tsne_vects.mean(axis = 0)
-tsne_std            = comments_tsne_vects.std(axis = 0)
-comments_tsne_vects = (comments_tsne_vects - tsne_mean) / tsne_std
-alpha               = .3
-cluster_colors      = np.array([
-    'magenta',
-    'darkblue',
-    'darkgreen',
-    'orangered',
-    'sienna',
-    'plum'
-])
 
 cluster_coords = []
 for cluster_id in range(n_clusters):
@@ -168,18 +155,6 @@ cluster_shifts = np.array([
 ])
 figure_comment_coords = cluster_shifts[clusters_final] + cluster_coords
 
-# plt.figure(figsize = (15, 15))
-# for cluster_id, (shift_x, shift_y) in zip(range(n_clusters), cluster_shifts):
-#     cluster_coord = figure_comment_coords[clusters_final == cluster_id]
-#     plt.scatter(
-#         x     = cluster_coord[:, 0],
-#         y     = cluster_coord[:, 1],
-#         alpha = alpha,
-#         c     = cluster_colors[cluster_id]
-#     )
-# plt.axis('off')
-# plt.show()
-
 df_dict = OrderedDict([
     ('comment'      , selected_comments_final),
     ('cluster'      , clusters_final),
@@ -189,5 +164,3 @@ df_dict = OrderedDict([
 ])
 df = pd.DataFrame.from_dict(df_dict)
 df.to_csv('grand_debat_comments.csv', index = False)
-
-pdb.set_trace()
