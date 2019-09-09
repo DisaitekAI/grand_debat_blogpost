@@ -139,15 +139,17 @@ for cluster_id, cluster_comments in enumerate(selected_comments_list):
     for comment in cluster_comments.sample(10, replace = True, random_state = seed):
         print(f'\t{comment}\n')
 
+# viz_algorithm = TSNE
+viz_algorithm = umap.UMAP
 
 cluster_coords = []
 for cluster_id in range(n_clusters):
-    cluster_vects      = comment_vectors_final[clusters_final == cluster_id]
-    cluster_vects_tsne = TSNE(n_components = 2).fit_transform(cluster_vects)
-    tsne_mean          = cluster_vects_tsne.mean(axis = 0)
-    tsne_std           = cluster_vects_tsne.std(axis = 0)
-    cluster_vects_tsne = (cluster_vects_tsne - tsne_mean) / tsne_std
-    cluster_coords.append(cluster_vects_tsne)
+    cluster_vects     = comment_vectors_final[clusters_final == cluster_id]
+    cluster_vects_viz = viz_algorithm().fit_transform(cluster_vects)
+    viz_mean          = cluster_vects_viz.mean(axis = 0)
+    viz_std           = cluster_vects_viz.std(axis = 0)
+    cluster_vects_viz = (cluster_vects_viz - viz_mean) / viz_std
+    cluster_coords.append(cluster_vects_viz)
 cluster_coords = np.concatenate(cluster_coords, axis = 0)
 
 comment_coords = np.zeros((len(selected_comments_final), 2))
