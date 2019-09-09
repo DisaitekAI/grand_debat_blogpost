@@ -126,6 +126,7 @@ for cluster_id in range(n_clusters):
 selected_comments_final = pd.concat(selected_comments_list)
 comment_vectors_final   = np.concatenate(selected_vectors_list, axis = 0)
 clusters_final          = np.concatenate(selected_clusters_list, axis = 0)
+cluster_reprs           = np.array(cluster_reprs)
 
 for cluster_id, cluster_comments in enumerate(selected_comments_list):
     print(f'#################### Cluster {cluster_id} -> {len(cluster_comments):4d} Elements ####################')
@@ -166,20 +167,33 @@ for cluster_id in range(n_clusters):
     cluster_coords.append(cluster_vects_tsne)
 cluster_coords = np.concatenate(cluster_coords, axis = 0)
 
+comment_coords = np.zeros((len(selected_comments_final), 2))
+x_shift_scale  = 9
+y_shift_scale  = 6
+cluster_shifts = np.array([
+    (x * x_shift_scale, y * y_shift_scale)
+    for x in [-1, 0, 1]
+    for y in [0, 1]
+])
+figure_comment_coords = cluster_shifts[clusters_final] + cluster_coords
+
 plt.figure(figsize = (15, 15))
-cluster_shifts = [(x, y) for x in [-1, 0, 1] for y in [0, 1]]
-x_shift_scale = 9
-y_shift_scale = 6
 for cluster_id, (shift_x, shift_y) in zip(range(n_clusters), cluster_shifts):
-    cluster_coord = cluster_coords[clusters_final == cluster_id]
+    cluster_coord = figure_comment_coords[clusters_final == cluster_id]
     plt.scatter(
-        x     = cluster_coord[:, 0] + x_shift_scale * shift_x,
-        y     = cluster_coord[:, 1] + y_shift_scale * shift_y,
+        x     = cluster_coord[:, 0],
+        y     = cluster_coord[:, 1],
         alpha = alpha,
         c     = cluster_colors[cluster_id]
     )
 plt.axis('off')
-# plt.savefig('../images/step_4.jpg')
 plt.show()
+
+csv_dict = OrderedDict([
+    ('comment', selected_comments_final),
+    ('cluster', clusters_final),
+    ('cluster_name', cluster_reprs[clusters_final]),
+    ('x', 5)
+])
 
 pdb.set_trace()
