@@ -146,14 +146,40 @@ cluster_colors      = np.array([
     'plum'
 ])
 
+# plt.figure(figsize = (15, 15))
+# plt.scatter(
+#     comments_tsne_vects[:, 0],
+#     comments_tsne_vects[:, 1,],
+#     alpha = alpha,
+#     c     = cluster_colors[clusters_final]
+# )
+# plt.axis('off')
+# plt.show()
+
+cluster_coords = []
+for cluster_id in range(n_clusters):
+    cluster_vects      = comment_vectors_final[clusters_final == cluster_id]
+    cluster_vects_tsne = TSNE(n_components = 2).fit_transform(cluster_vects)
+    tsne_mean          = cluster_vects_tsne.mean(axis = 0)
+    tsne_std           = cluster_vects_tsne.std(axis = 0)
+    cluster_vects_tsne = (cluster_vects_tsne - tsne_mean) / tsne_std
+    cluster_coords.append(cluster_vects_tsne)
+cluster_coords = np.concatenate(cluster_coords, axis = 0)
+
 plt.figure(figsize = (15, 15))
-plt.scatter(
-    comments_tsne_vects[:, 0],
-    comments_tsne_vects[:, 1,],
-    alpha = alpha,
-    c     = cluster_colors[clusters_final]
-)
+cluster_shifts = [(x, y) for x in [-1, 0, 1] for y in [0, 1]]
+x_shift_scale = 9
+y_shift_scale = 6
+for cluster_id, (shift_x, shift_y) in zip(range(n_clusters), cluster_shifts):
+    cluster_coord = cluster_coords[clusters_final == cluster_id]
+    plt.scatter(
+        x     = cluster_coord[:, 0] + x_shift_scale * shift_x,
+        y     = cluster_coord[:, 1] + y_shift_scale * shift_y,
+        alpha = alpha,
+        c     = cluster_colors[cluster_id]
+    )
 plt.axis('off')
+# plt.savefig('../images/step_4.jpg')
 plt.show()
 
 pdb.set_trace()
