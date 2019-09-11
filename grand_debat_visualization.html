@@ -8,7 +8,13 @@
         <style>
         body {
             font: 15px sans-serif;
-        }
+            margin: auto;
+            width: 1600px;
+         }
+
+         h1 {
+             text-align: center;
+         }
 
         .axis path,
         .axis line {
@@ -31,6 +37,7 @@
          </style>
     </head>
     <body>
+        <h1>Pouvez-vous identifier des règles que l'administration vous a déjà <br/> demandé d'appliquer et que vous avez jugées inutiles ou trop complexes ?</h1>
         <div id="vis-container"></div>
 
         <!-- Optionally reference your vis JS file here, or define in a script tag -->
@@ -47,10 +54,8 @@
          var makeVis = function(data) {
              // Common pattern for defining vis size and margins
              var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-                 /* width  = 960 - margin.left - margin.right,
-                  * height = 500 - margin.top - margin.bottom; */
                  width  = 1600 - margin.left - margin.right,
-                 height = 1000 - margin.top - margin.bottom;
+                 height = 800 - margin.top - margin.bottom;
 
              // Add the visualization svg canvas to the vis-container <div>
              var canvas = d3.select("#vis-container").append("svg")
