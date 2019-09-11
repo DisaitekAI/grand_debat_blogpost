@@ -52,8 +52,6 @@ comments = comments[comments_len < comments_len.quantile(.9)]
 # We sample a few comments and print them.
 print(*comments.sample(10), sep = '\n\n')
 
-# comments = comments.sample(1000)
-
 # Vectorizing comments using TF-IDF
 # First we create the vectorizer
 tfidf           = TfidfVectorizer(min_df = 10, strip_accents = 'unicode')
