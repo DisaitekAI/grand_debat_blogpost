@@ -152,7 +152,8 @@ for cluster_id in range(n_clusters):
     cluster_coords.append(cluster_vects_viz)
 cluster_coords = np.concatenate(cluster_coords, axis = 0)
 
-comment_coords = np.zeros((len(selected_comments_final), 2))
+# We shift each cluster embeddings to place them on a grid. As we have
+# normalized the coordinates above, the overlap should be minimal.
 x_shift_scale  = 9
 y_shift_scale  = 6
 cluster_shifts = np.array([
@@ -162,9 +163,9 @@ cluster_shifts = np.array([
 ])
 figure_comment_coords = cluster_shifts[clusters_final] + cluster_coords
 
+# Saving the figure data to a CSV file.
 df_dict = OrderedDict([
     ('comment'      , selected_comments_final),
-    ('cluster'      , clusters_final),
     ('cluster_name' , cluster_reprs[clusters_final]),
     ('x'            , figure_comment_coords[:, 0]),
     ('y'            , figure_comment_coords[:, 1]),
