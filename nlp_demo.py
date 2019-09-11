@@ -90,7 +90,7 @@ for cluster_id, cluster_size in zip(*np.unique(clusters, return_counts = True)):
     # displays.
     print(f'cluster {cluster_id} -> {cluster_size:4d} elements')
 
-quantile_cutoff        = 1 # The proportion of comments closest to
+quantile_cutoff        = .5 # The proportion of comments closest to
                             # the center we will keep for the final
                             # figure.
 cluster_reprs          = [] # The most representative comment of the
@@ -139,8 +139,8 @@ for cluster_id, cluster_comments in enumerate(selected_comments_list):
     for comment in cluster_comments.sample(10, replace = True, random_state = seed):
         print(f'\t{comment}\n')
 
-# viz_algorithm = TSNE
-viz_algorithm = umap.UMAP
+viz_algorithm = TSNE
+# viz_algorithm = umap.UMAP
 
 cluster_coords = []
 for cluster_id in range(n_clusters):
