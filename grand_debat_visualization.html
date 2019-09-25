@@ -65,7 +65,7 @@
                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
               // Define our scales
-              var colorScale = d3.scale.category10();
+             var colorScale = d3.scale.category10();
 
              var xScale = d3.scale.linear()
                             .domain([ d3.min(data, function(d) { return d.x; }) - 1,
