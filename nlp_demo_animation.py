@@ -28,7 +28,7 @@ if download:
 df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
 comments = df.iloc[:, 25]
 print(len(comments))
-comments = comments.sample(1000, random_state = seed)
+comments = comments.sample(30000, random_state = seed)
 
 # Comments cleaning and selection
 empty_comments = comments.isnull()
@@ -175,4 +175,4 @@ df_dict = OrderedDict([
     ('y'            , figure_comment_coords[:, 1]),
 ])
 df = pd.DataFrame.from_dict(df_dict)
-df.to_csv('gd_animation.csv', index = False)
+df.to_csv('gd_animation_subset.csv', index = False)
