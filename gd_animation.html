@@ -51,10 +51,10 @@
        var xScale = d3.scale.linear()  // xScale is width of graphic
                       .domain([
                           d3.min(dataset, function(d) {
-                              return d.x;  // input domain
+                              return d.init_x;  // input domain
                           }),
                           d3.max(dataset, function(d) {
-                              return d.x;  // input domain
+                              return d.init_x;  // input domain
                           })
                       ])
                       .range([padding, canvas_width - padding * 2]); // output range
@@ -62,10 +62,10 @@
        var yScale = d3.scale.linear()  // yScale is height of graphic
                       .domain([
                           d3.min(dataset, function(d) {
-                              return d.y;  // input domain
+                              return d.init_y;  // input domain
                           }),
                           d3.max(dataset, function(d) {
-                              return d.y;  // input domain
+                              return d.init_y;  // input domain
                           })
                       ])
                       .range([canvas_height - padding, padding]);  // remember y starts on top going down so we flip
@@ -93,10 +93,10 @@
                    .enter()
                    .append("circle")  // Add circle svg
                    .attr("cx", function(d) {
-                       return xScale(d.x);  // Circle's X
+                       return xScale(d.init_x);  // Circle's X
                    })
                    .attr("cy", function(d) {  // Circle's Y
-                       return yScale(d.y);
+                       return yScale(d.init_y);
                    })
                    .attr("r", 2);  // radius
 
@@ -111,6 +111,79 @@
           .attr("class", "y axis")
           .attr("transform", "translate(" + padding +",0)")
           .call(yAxis);
+
+       // On click, update with new data
+       d3.select("h4")
+         .on("click", function() {
+             /* var numValues = dataset.length;  // Get original dataset's length
+              * var maxRange = Math.random() * 1000;  // Get max range of new values
+              * dataset = [];  // Initialize empty array
+              * for(var i=0; i<numValues; i++) {
+              *     var newNumber1 = Math.floor(Math.random() * maxRange);  // Random int for x
+              *     var newNumber2 = Math.floor(Math.random() * maxRange);  // Random int for y
+              *     dataset.push([newNumber1, newNumber2]);  // Add new numbers to array
+              * }
+              */
+
+             // Update scale domains
+             xScale.domain([
+                 d3.min(dataset, function(d) {
+                     return d.x;
+                 }),
+                 d3.max(dataset, function(d) {
+                     return d.x;
+                 })]
+             );
+             yScale.domain([
+                 d3.min(dataset, function(d) {
+                     return d.y;
+                 }),
+                 d3.max(dataset, function(d) {
+                     return d.y;
+                 })
+             ]);
+
+             // Update circles
+             svg.selectAll("circle")
+                .data(dataset)  // Update with new data
+                .transition()  // Transition from old to new
+                .duration(1000)  // Length of animation
+                .each("start", function() {  // Start animation
+                    d3.select(this)  // 'this' means the current element
+                      .attr("fill", "red")  // Change color
+                      .attr("r", 3);  // Change size
+                })
+                .delay(function(d, i) {
+                    return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
+                })
+             /* .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear' */
+                .attr("cx", function(d) {
+                    return xScale(d.x);  // Circle's X
+                })
+                .attr("cy", function(d) {
+                    return yScale(d.y);  // Circle's Y
+                })
+                .each("end", function() {  // End animation
+                    d3.select(this)  // 'this' means the current element
+                      .transition()
+                      .duration(500)
+                      .attr("fill", "black")  // Change color
+                      .attr("r", 2);  // Change radius
+                });
+
+             // Update X Axis
+             svg.select(".x.axis")
+                .transition()
+                .duration(1000)
+                .call(xAxis);
+
+             // Update Y Axis
+             svg.select(".y.axis")
+                .transition()
+                .duration(100)
+                .call(yAxis);
+         });
+       
    };
   </script>
   </body>
