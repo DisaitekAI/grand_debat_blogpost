@@ -30,7 +30,7 @@
 
   <!-- Begin D3 Javascript -->
   <script type="text/javascript">
-   d3.csv('./gd_animation.csv', function loadCallback(error, data) {
+   d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) {
        data.forEach(function(d){
            d.x      = +d.x;
            d.y      = +d.y;
@@ -41,6 +41,9 @@
        makeViz(data);
    });
 
+   var colorScale    = d3.scale.category10();
+   var dotRadius     = 3;
+   var dotRadiusAnim = 5;
    var makeViz = function(dataset) {
        // Setup settings for graphic
        var canvas_width = 1000;
@@ -98,7 +101,7 @@
                    .attr("cy", function(d) {  // Circle's Y
                        return yScale(d.init_y);
                    })
-                   .attr("r", 2);  // radius
+                   .attr("r", dotRadius);  // radius
 
        // Add to X axis
        svg.append("g")
@@ -115,16 +118,6 @@
        // On click, update with new data
        d3.select("h4")
          .on("click", function() {
-             /* var numValues = dataset.length;  // Get original dataset's length
-              * var maxRange = Math.random() * 1000;  // Get max range of new values
-              * dataset = [];  // Initialize empty array
-              * for(var i=0; i<numValues; i++) {
-              *     var newNumber1 = Math.floor(Math.random() * maxRange);  // Random int for x
-              *     var newNumber2 = Math.floor(Math.random() * maxRange);  // Random int for y
-              *     dataset.push([newNumber1, newNumber2]);  // Add new numbers to array
-              * }
-              */
-
              // Update scale domains
              xScale.domain([
                  d3.min(dataset, function(d) {
@@ -151,7 +144,7 @@
                 .each("start", function() {  // Start animation
                     d3.select(this)  // 'this' means the current element
                       .attr("fill", "red")  // Change color
-                      .attr("r", 3);  // Change size
+                      .attr("r", dotRadiusAnim);  // Change size
                 })
                 .delay(function(d, i) {
                     return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
@@ -167,9 +160,12 @@
                     d3.select(this)  // 'this' means the current element
                       .transition()
                       .duration(500)
-                      .attr("fill", "black")  // Change color
-                      .attr("r", 2);  // Change radius
+                      .attr("fill", function(d) {
+                          return colorScale(d.cluster_name);
+                      })
+                      .attr("r", dotRadius);  // Change radius
                 });
+             /* .attr("fill", "black")  // Change color */
 
              // Update X Axis
              svg.select(".x.axis")
