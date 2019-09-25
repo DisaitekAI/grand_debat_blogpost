@@ -26,8 +26,7 @@
     <h2>D3 Scatterplot </h2>
     <p>This is a data visualization using transitions with a scatterplot</p>
     <h4>Click on this text to update chart with new values</h4>
-    <h3></h3>
-
+    <div id="vis-container"></div>
   <!-- Begin D3 Javascript -->
   <script type="text/javascript">
    d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) {
@@ -85,7 +84,7 @@
                      .orient("left")
                      .ticks(5);
        // Create SVG element
-       var svg = d3.select("h3")  // This is where we put our vis
+       var svg = d3.select("#vis-container")  // This is where we put our vis
                    .append("svg")
                    .attr("width", canvas_width)
                    .attr("height", canvas_height)
