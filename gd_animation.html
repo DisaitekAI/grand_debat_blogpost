@@ -45,9 +45,9 @@
    var dotRadiusAnim = 5;
    var makeViz = function(dataset) {
        // Setup settings for graphic
-       var canvas_width = 1000;
-       var canvas_height = 600;
-       var padding = 30;  // for chart edges
+       var canvasWidth  = 1000;
+       var canvasHeight = 600;
+       var padding       = 30;  // for chart edges
 
        // Create scale functions
        var xScale = d3.scale.linear()  // xScale is width of graphic
@@ -59,7 +59,7 @@
                               return d.init_x;  // input domain
                           })
                       ])
-                      .range([padding, canvas_width - padding * 2]); // output range
+                      .range([padding, canvasWidth - padding * 2]); // output range
 
        var yScale = d3.scale.linear()  // yScale is height of graphic
                       .domain([
@@ -70,7 +70,7 @@
                               return d.init_y;  // input domain
                           })
                       ])
-                      .range([canvas_height - padding, padding]);  // remember y starts on top going down so we flip
+                      .range([canvasHeight - padding, padding]);  // remember y starts on top going down so we flip
 
        // Define X axis
        var xAxis = d3.svg.axis()
@@ -86,8 +86,8 @@
        // Create SVG element
        var svg = d3.select("#vis-container")  // This is where we put our vis
                    .append("svg")
-                   .attr("width", canvas_width)
-                   .attr("height", canvas_height)
+                   .attr("width", canvasWidth)
+                   .attr("height", canvasHeight)
 
        // Create Circles
        svg.selectAll("circle")
@@ -105,7 +105,7 @@
        // Add to X axis
        svg.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate(0," + (canvas_height - padding) +")")
+          .attr("transform", "translate(0," + (canvasHeight - padding) +")")
           .call(xAxis);
 
        // Add to Y axis
