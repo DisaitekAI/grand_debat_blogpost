@@ -139,8 +139,8 @@ for cluster_id, cluster_comments in enumerate(selected_comments_list):
     for comment in cluster_comments.sample(10, replace = True, random_state = seed):
         print(f'\t{comment}\n')
 
-# viz_algorithm = TSNE
-viz_algorithm = umap.UMAP
+viz_algorithm = TSNE
+# viz_algorithm = umap.UMAP
 
 cluster_coords = []
 for cluster_id in range(n_clusters):
