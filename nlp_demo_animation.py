@@ -139,8 +139,8 @@ for cluster_id, cluster_comments in enumerate(selected_comments_list):
     for comment in cluster_comments.sample(10, replace = True, random_state = seed):
         print(f'\t{comment}\n')
 
-viz_algorithm = TSNE
-# viz_algorithm = umap.UMAP
+# viz_algorithm = TSNE
+viz_algorithm = umap.UMAP
 
 cluster_coords = []
 for cluster_id in range(n_clusters):
@@ -163,8 +163,8 @@ cluster_shifts = np.array([
 ])
 figure_comment_coords = cluster_shifts[clusters_final] + cluster_coords
 
-initial_coords          = np.random.randn(len(figure_comment_coords), 2)
-global_first_viz_coords = viz_algorithm().fit_transform(comment_vectors_final)
+initial_coords = np.random.randn(len(figure_comment_coords), 2)
+dim_red_coords = viz_algorithm().fit_transform(comment_vectors_final)
 
 # Saving the figure data to a CSV file.
 df_dict = OrderedDict([
@@ -172,8 +172,8 @@ df_dict = OrderedDict([
     ('cluster_name' , cluster_reprs[clusters_final]),
     ('init_x'       , initial_coords[:, 0]),
     ('init_y'       , initial_coords[:, 1]),
-    ('tsne_x'       , global_first_viz_coords[:, 0]),
-    ('tsne_y'       , global_first_viz_coords[:, 1]),
+    ('dim_red_x'    , dim_red_coords[:, 0]),
+    ('dim_red_y'    , dim_red_coords[:, 1]),
     ('x'            , figure_comment_coords[:, 0]),
     ('y'            , figure_comment_coords[:, 1]),
 ])

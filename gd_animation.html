@@ -51,8 +51,8 @@
                  d.y      = +d.y;
                  d.init_x = +d.init_x;
                  d.init_y = +d.init_y;
-                 d.tsne_x = +d.tsne_x;
-                 d.tsne_y = +d.tsne_y;
+                 d.dim_red_x = +d.dim_red_x;
+                 d.dim_red_y = +d.dim_red_y;
              });
              makeViz(data);
          });
@@ -140,18 +140,18 @@
                    // Update scale domains
                    xScale.domain([
                        d3.min(dataset, function(d) {
-                           return d.tsne_x;
+                           return d.dim_red_x;
                        }),
                        d3.max(dataset, function(d) {
-                           return d.tsne_x;
+                           return d.dim_red_x;
                        })]
                    )
                    yScale.domain([
                        d3.min(dataset, function(d) {
-                           return d.tsne_y;
+                           return d.dim_red_y;
                        }),
                        d3.max(dataset, function(d) {
-                           return d.tsne_y;
+                           return d.dim_red_y;
                        })
                    ]);
 
@@ -170,10 +170,10 @@
                       })
                    // .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear'
                       .attr("cx", function(d) {
-                          return xScale(d.tsne_x);  // Circle's X
+                          return xScale(d.dim_red_x);  // Circle's X
                       })
                       .attr("cy", function(d) {
-                          return yScale(d.tsne_y);  // Circle's Y
+                          return yScale(d.dim_red_y);  // Circle's Y
                       })
                       .each("end", function() {  // End animation
                           d3.select(this)  // 'this' means the current element
