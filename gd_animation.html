@@ -97,20 +97,6 @@
                              .attr("class", "tooltip")
                              .style("opacity", 0.5);
 
-             // Create Circles
-             svg.selectAll("circle")
-                .data(dataset)
-                .enter()
-                .append("circle")
-                .attr("class", "dot")
-                .attr("cx", function(d) {
-                    return xScale(d.init_x);  // Circle's X
-                })
-                .attr("cy", function(d) {  // Circle's Y
-                    return yScale(d.init_y);
-                })
-                .attr("r", dotRadius);  // radius
-
              function tipMouseover(d) {
                  var html = "<b>" + d.comment + "</b>";
 
@@ -127,11 +113,23 @@
                         .duration(300)
                         .style("opacity", 0);
              };
-
-             d3.selectAll("circle")
-               .on("mouseover", tipMouseover)
-               .on("mouseout", tipMouseout);
              
+             // Create Circles
+             svg.selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", function(d) {
+                    return xScale(d.init_x);  // Circle's X
+                })
+                .attr("cy", function(d) {  // Circle's Y
+                    return yScale(d.init_y);
+                })
+                .attr("r", dotRadius)  // radius
+                .on("mouseover", tipMouseover)
+                .on("mouseout", tipMouseout); 
+
              // On click, update with new data
              d3.select("h4")
                .on("click", function() {
@@ -207,7 +205,6 @@
                      .on("mouseover", tipMouseover)
                      .on("mouseout", tipMouseout);
                });
-
          };
         </script>
     </body>
