@@ -111,6 +111,27 @@
                 })
                 .attr("r", dotRadius);  // radius
 
+             function tipMouseover(d) {
+                 var html = "<b>" + d.comment + "</b>";
+
+                 tooltip.html(html)
+                        .style("left", (d3.event.pageX + 15) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", .9);
+             };
+
+             function tipMouseout(d) {
+                 tooltip.transition()
+                        .duration(300)
+                        .style("opacity", 0);
+             };
+
+             d3.selectAll("circle")
+               .on("mouseover", tipMouseover)
+               .on("mouseout", tipMouseout);
+             
              // On click, update with new data
              d3.select("h4")
                .on("click", function() {
@@ -199,26 +220,6 @@
                       .call(yAxis);
                });
 
-             function tipMouseover(d) {
-                 var html = "<b>" + d.comment + "</b>";
-
-                 tooltip.html(html)
-                        .style("left", (d3.event.pageX + 15) + "px")
-                        .style("top", (d3.event.pageY - 28) + "px")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", .9);
-             };
-
-             function tipMouseout(d) {
-                 tooltip.transition()
-                        .duration(300)
-                        .style("opacity", 0);
-             };
-
-             d3.selectAll("circle")
-               .on("mouseover", tipMouseover)
-               .on("mouseout", tipMouseout);
          };
         </script>
     </body>
