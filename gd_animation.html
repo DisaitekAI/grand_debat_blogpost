@@ -206,18 +206,6 @@
                    d3.selectAll("circle")
                      .on("mouseover", tipMouseover)
                      .on("mouseout", tipMouseout);
-
-                   // Update X Axis
-                   svg.select(".x.axis")
-                      .transition()
-                      .duration(1000)
-                      .call(xAxis);
-
-                   // Update Y Axis
-                   svg.select(".y.axis")
-                      .transition()
-                      .duration(100)
-                      .call(yAxis);
                });
 
          };
