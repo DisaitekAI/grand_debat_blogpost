@@ -100,64 +100,13 @@
              var svg = d3.select("#vis-container")  // This is where we put our vis
                          .append("svg")
                          .attr("width", canvasWidth)
-                         .attr("height", canvasHeight)
-                         .append("g");
+                         .attr("height", canvasHeight);
 
              // Create tooltip for mouseover
              var tooltip = d3.select("#vis-container")
                              .append("div")
                              .attr("class", "tooltip")
                              .style("opacity", 0.5);
-
-             var tipMouseover = function(d) {
-                 console.log(d.comment);
-                 /* var html = "<b>" + d.comment + "</b>";
-
-                  * tooltip.html(html)
-                  *        .style("left", (d3.event.pageX + 15) + "px")
-                  *        .style("top", (d3.event.pageY - 28) + "px")
-                  *        .transition()
-                  *        .duration(200)
-                  *        .style("opacity", .9); */
-             };
-
-             var tipMouseout = function(d) {
-                 console.log(d.comment);
-                 /* tooltip.transition()
-                  *        .duration(300)
-                  *        .style("opacity", 0); */
-             };
-
-             // Create Circles
-             svg.selectAll(".dot")
-                .data(dataset)
-                .enter()
-                .append("circle")
-                .attr("class", "dot")
-                .attr("cx", function(d) {
-                    return xScale(d.init_x);  // Circle's X
-                })
-                .attr("cy", function(d) {  // Circle's Y
-                    return yScale(d.init_y);
-                })
-                .attr("r", dotRadius)  // radius
-                .on("mouveover", tipMouseover)
-                .on("mouveout", tipMouseout);
-
-             /* svg.selectAll("circle")
-              *    .data(dataset)
-              *    .enter()
-              *    .append("circle")  // Add circle svg
-              *    .attr("cx", function(d) {
-              *        return xScale(d.init_x);  // Circle's X
-              *    })
-              *    .attr("cy", function(d) {  // Circle's Y
-              *        return yScale(d.init_y);
-              *    })
-              *    .attr("r", dotRadius)  // radius
-              *    .on("mouveover", tipMouseover)
-              *    .on("mouveout", tipMouseout);
-              */
 
              // Add to X axis
              svg.append("g")
@@ -170,6 +119,20 @@
                 .attr("class", "y axis")
                 .attr("transform", "translate(" + padding +",0)")
                 .call(yAxis);
+
+             // Create Circles
+             svg.selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", function(d) {
+                    return xScale(d.init_x);  // Circle's X
+                })
+                .attr("cy", function(d) {  // Circle's Y
+                    return yScale(d.init_y);
+                })
+                .attr("r", dotRadius);  // radius
 
              // On click, update with new data
              d3.select("h4")
@@ -223,6 +186,29 @@
                       });
                    // .attr("fill", "black")  // Change color 
 
+                   function tipMouseover(d) {
+                       var color = colorScale(d.cluster_name);
+                       var html  = "<b> Cluster : </b> <span style='color:" + color + ";'>"
+                                 + d.cluster_name + "</span><br/>" + "<b>" + d.comment + "</b>";
+
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
+
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
+
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
+
                    // Update X Axis
                    svg.select(".x.axis")
                       .transition()
@@ -236,6 +222,26 @@
                       .call(yAxis);
                });
 
+             function tipMouseover(d) {
+                 var html = "<b>" + d.comment + "</b>";
+
+                 tooltip.html(html)
+                        .style("left", (d3.event.pageX + 15) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", .9);
+             };
+
+             function tipMouseout(d) {
+                 tooltip.transition()
+                        .duration(300)
+                        .style("opacity", 0);
+             };
+
+             d3.selectAll("circle")
+               .on("mouseover", tipMouseover)
+               .on("mouseout", tipMouseout);
          };
         </script>
     </body>
