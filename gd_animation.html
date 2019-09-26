@@ -70,13 +70,18 @@
              makeViz(data);
          });
 
+         // Global animation variables
          var colorScale       = d3.scale.category10();
-         var dotRadius        = 3;
-         var dotRadiusAnim    = 5;
+         var dotRadius        = 5;
+         var dotRadiusAnim    = 7;
          var transitionColor  = "red";
          // Transition easing - default 'variable' (i.e. has acceleration), also:
          // 'circle', 'elastic', 'bounce', 'linear'
          var transitionEasing = "variable";
+         var animationStart   = 1500;
+         var animationEnd     = 1500;
+         var animationDelay   = 9000;
+
          var makeViz = function(dataset) {
              // Setup settings for graphic
              var canvasWidth  = 1000;
@@ -176,14 +181,14 @@
                    svg.selectAll("circle")
                       .data(dataset)  // Update with new data
                       .transition()  // Transition from old to new
-                      .duration(1000)  // Length of animation
+                      .duration(animationStart)  // Length of animation
                       .each("start", function() {  // Start animation
                           d3.select(this)  // 'this' means the current element
                             .attr("fill", transitionColor)  // Change color
                             .attr("r", dotRadiusAnim);  // Change size
                       })
                       .delay(function(d, i) {
-                          return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
                       })
                       .ease(transitionEasing)
                       .attr("cx", function(d) {
@@ -195,7 +200,7 @@
                       .each("end", function() {  // End animation
                           d3.select(this)  // 'this' means the current element
                             .transition()
-                            .duration(500)
+                            .duration(animationEnd)
                             .attr("fill", "black")
                             .attr("r", dotRadius);  // Change radius
                       });
@@ -226,14 +231,14 @@
                    svg.selectAll("circle")
                       .data(dataset)  // Update with new data
                       .transition()  // Transition from old to new
-                      .duration(1000)  // Length of animation
+                      .duration(animationStart)  // Length of animation
                       .each("start", function() {  // Start animation
                           d3.select(this)  // 'this' means the current element
                             .attr("fill", transitionColor)  // Change color
                             .attr("r", dotRadiusAnim);  // Change size
                       })
                       .delay(function(d, i) {
-                          return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
                       })
                       .ease(transitionEasing)
                       .attr("cx", function(d) {
@@ -245,7 +250,7 @@
                       .each("end", function() {  // End animation
                           d3.select(this)  // 'this' means the current element
                             .transition()
-                            .duration(500)
+                            .duration(animationEnd)
                             .attr("fill", function(d) {
                                 return colorScale(d.cluster_name);
                             })
@@ -302,14 +307,14 @@
                    svg.selectAll("circle")
                       .data(dataset)  // Update with new data
                       .transition()  // Transition from old to new
-                      .duration(1000)  // Length of animation
+                      .duration(animationStart)  // Length of animation
                       .each("start", function() {  // Start animation
                           d3.select(this)  // 'this' means the current element
                           /* .attr("fill", "red")  // Change color */
                             .attr("r", dotRadiusAnim);  // Change size
                       })
                       .delay(function(d, i) {
-                          return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
                       })
                       .ease(transitionEasing)
                       .attr("cx", function(d) {
@@ -321,7 +326,7 @@
                       .each("end", function() {  // End animation
                           d3.select(this)  // 'this' means the current element
                             .transition()
-                            .duration(500)
+                            .duration(animationEnd)
                             .attr("fill", function(d) {
                                 return colorScale(d.cluster_name);
                             })
