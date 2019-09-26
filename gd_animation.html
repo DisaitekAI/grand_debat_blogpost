@@ -70,10 +70,13 @@
              makeViz(data);
          });
 
-         var colorScale      = d3.scale.category10();
-         var dotRadius       = 3;
-         var dotRadiusAnim   = 5;
-         var transitionColor = "red";
+         var colorScale       = d3.scale.category10();
+         var dotRadius        = 3;
+         var dotRadiusAnim    = 5;
+         var transitionColor  = "red";
+         // Transition easing - default 'variable' (i.e. has acceleration), also:
+         // 'circle', 'elastic', 'bounce', 'linear'
+         var transitionEasing = "variable";
          var makeViz = function(dataset) {
              // Setup settings for graphic
              var canvasWidth  = 1000;
@@ -182,7 +185,7 @@
                       .delay(function(d, i) {
                           return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
                       })
-                   // .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear'
+                      .ease(transitionEasing)
                       .attr("cx", function(d) {
                           return xScale(d.dim_red_x);  // Circle's X
                       })
@@ -196,30 +199,6 @@
                             .attr("fill", "black")
                             .attr("r", dotRadius);  // Change radius
                       });
-                   // .attr("fill", "black")  // Change color
-
-                   /* function tipMouseover(d) {
-                    *     var color = colorScale(d.cluster_name);
-                    *     var html  = "<b> Cluster : </b> <span style='color:" + color + ";'>"
-                    *               + d.cluster_name + "</span><br/>" + "<b>" + d.comment + "</b>";
-
-                    *     tooltip.html(html)
-                    *            .style("left", (d3.event.pageX + 15) + "px")
-                    *            .style("top", (d3.event.pageY - 28) + "px")
-                    *            .transition()
-                    *            .duration(200)
-                    *            .style("opacity", .9);
-                    * };
-
-                    * function tipMouseout(d) {
-                    *     tooltip.transition()
-                    *            .duration(300)
-                    *            .style("opacity", 0);
-                    * };
-
-                    * d3.selectAll("circle")
-                    *   .on("mouseover", tipMouseover)
-                    *   .on("mouseout", tipMouseout); */
                });
 
              // On click, display cluster colors
@@ -256,7 +235,7 @@
                       .delay(function(d, i) {
                           return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
                       })
-                   // .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear'
+                      .ease(transitionEasing)
                       .attr("cx", function(d) {
                           return xScale(d.dim_red_x);  // Circle's X
                       })
@@ -297,7 +276,7 @@
                     *   .on("mouseover", tipMouseover)
                     *   .on("mouseout", tipMouseout); */
                });
-             
+
              // On click, Move each comment to their respective clusters
              d3.select("#step_03")
                .on("click", function() {
@@ -332,7 +311,7 @@
                       .delay(function(d, i) {
                           return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
                       })
-                   // .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear'
+                      .ease(transitionEasing)
                       .attr("cx", function(d) {
                           return xScale(d.x);  // Circle's X
                       })
