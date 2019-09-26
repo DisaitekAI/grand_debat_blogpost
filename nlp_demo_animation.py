@@ -163,7 +163,8 @@ cluster_shifts = np.array([
 ])
 figure_comment_coords = cluster_shifts[clusters_final] + cluster_coords
 
-initial_coords = np.random.randn(len(figure_comment_coords), 2)
+initial_coords          = np.random.randn(len(figure_comment_coords), 2)
+global_first_viz_coords = viz_algorithm().fit_transform(comment_vectors_final)
 
 # Saving the figure data to a CSV file.
 df_dict = OrderedDict([
@@ -171,6 +172,8 @@ df_dict = OrderedDict([
     ('cluster_name' , cluster_reprs[clusters_final]),
     ('init_x'       , initial_coords[:, 0]),
     ('init_y'       , initial_coords[:, 1]),
+    ('tsne_x'       , global_first_viz_coords[:, 0]),
+    ('tsne_y'       , global_first_viz_coords[:, 1]),
     ('x'            , figure_comment_coords[:, 0]),
     ('y'            , figure_comment_coords[:, 1]),
 ])

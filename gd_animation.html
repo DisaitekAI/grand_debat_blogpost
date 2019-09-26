@@ -39,7 +39,8 @@
 
     <body>
         <h2>Pouvez-vous identifier des règles que l'administration vous a déjà <br/> demandé d'appliquer et que vous avez jugées inutiles ou trop complexes ?</h2>
-        <h4>Click on this text to update chart with new values</h4>
+        <h4 id="step_01">Step 1</h4>
+        <h4 id="step_02">Step 2</h4>
         <div id="vis-container"></div>
 
         <!-- Begin D3 Javascript -->
@@ -50,6 +51,8 @@
                  d.y      = +d.y;
                  d.init_x = +d.init_x;
                  d.init_y = +d.init_y;
+                 d.tsne_x = +d.tsne_x;
+                 d.tsne_y = +d.tsne_y;
              });
              makeViz(data);
          });
@@ -114,7 +117,7 @@
                         .duration(300)
                         .style("opacity", 0);
              };
-             
+
              // Create Circles
              svg.selectAll("circle")
                 .data(dataset)
@@ -129,10 +132,84 @@
                 })
                 .attr("r", dotRadius)  // radius
                 .on("mouseover", tipMouseover)
-                .on("mouseout", tipMouseout); 
+                .on("mouseout", tipMouseout);
 
-             // On click, update with new data
-             d3.select("h4")
+             // On click, move each comment to its TSNE position
+             d3.select("#step_01")
+               .on("click", function() {
+                   // Update scale domains
+                   xScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.tsne_x;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.tsne_x;
+                       })]
+                   )
+                   yScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.tsne_y;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.tsne_y;
+                       })
+                   ]);
+
+                   // Update circles
+                   svg.selectAll("circle")
+                          .data(dataset)  // Update with new data
+                          .transition()  // Transition from old to new
+                          .duration(1000)  // Length of animation
+                          .each("start", function() {  // Start animation
+                              d3.select(this)  // 'this' means the current element
+                                .attr("fill", "red")  // Change color
+                                .attr("r", dotRadiusAnim);  // Change size
+                          })
+                      .delay(function(d, i) {
+                          return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
+                      })
+                   // .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear'
+                      .attr("cx", function(d) {
+                          return xScale(d.tsne_x);  // Circle's X
+                      })
+                      .attr("cy", function(d) {
+                          return yScale(d.tsne_y);  // Circle's Y
+                      })
+                      .each("end", function() {  // End animation
+                          d3.select(this)  // 'this' means the current element
+                            .transition()
+                            .duration(500)
+                            .attr("fill", "black")
+                            .attr("r", dotRadius);  // Change radius
+                      });
+                   // .attr("fill", "black")  // Change color
+
+                   /* function tipMouseover(d) {
+                    *     var color = colorScale(d.cluster_name);
+                    *     var html  = "<b> Cluster : </b> <span style='color:" + color + ";'>"
+                    *               + d.cluster_name + "</span><br/>" + "<b>" + d.comment + "</b>";
+
+                    *     tooltip.html(html)
+                    *            .style("left", (d3.event.pageX + 15) + "px")
+                    *            .style("top", (d3.event.pageY - 28) + "px")
+                    *            .transition()
+                    *            .duration(200)
+                    *            .style("opacity", .9);
+                    * };
+
+                    * function tipMouseout(d) {
+                    *     tooltip.transition()
+                    *            .duration(300)
+                    *            .style("opacity", 0);
+                    * };
+
+                    * d3.selectAll("circle")
+                    *   .on("mouseover", tipMouseover)
+                    *   .on("mouseout", tipMouseout); */
+               });
+
+             // On click, Move each comment to their respective clusters
+             d3.select("#step_02")
                .on("click", function() {
                    // Update scale domains
                    xScale.domain([
@@ -165,7 +242,7 @@
                       .delay(function(d, i) {
                           return i / dataset.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
                       })
-                   // .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear' 
+                   // .ease("bounce")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear'
                       .attr("cx", function(d) {
                           return xScale(d.x);  // Circle's X
                       })
@@ -181,7 +258,7 @@
                             })
                             .attr("r", dotRadius);  // Change radius
                       });
-                   // .attr("fill", "black")  // Change color 
+                   // .attr("fill", "black")  // Change color
 
                    function tipMouseover(d) {
                        var color = colorScale(d.cluster_name);
