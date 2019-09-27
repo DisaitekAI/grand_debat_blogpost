@@ -282,6 +282,27 @@
                             .attr("fill", "black")
                             .attr("r", dotRadius);  // Change radius
                       });
+
+                   function tipMouseover(d) {
+                       var html = "<b>" + d.comment + "</b>";
+
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
+
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
+
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
                });
 
              // On click, display cluster colors
@@ -336,28 +357,27 @@
                       });
                    // .attr("fill", "black")  // Change color
 
-                   /* function tipMouseover(d) {
-                    *     var color = colorScale(d.cluster_name);
-                    *     var html  = "<b> Cluster : </b> <span style='color:" + color + ";'>"
-                    *               + d.cluster_name + "</span><br/>" + "<b>" + d.comment + "</b>";
+                   function tipMouseover(d) {
+                       var color = colorScale(d.cluster_name);
+                       var html  = "<b>  <span style='color:" + color + ";'>" + d.comment + "</span> </b>";
 
-                    *     tooltip.html(html)
-                    *            .style("left", (d3.event.pageX + 15) + "px")
-                    *            .style("top", (d3.event.pageY - 28) + "px")
-                    *            .transition()
-                    *            .duration(200)
-                    *            .style("opacity", .9);
-                    * };
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
 
-                    * function tipMouseout(d) {
-                    *     tooltip.transition()
-                    *            .duration(300)
-                    *            .style("opacity", 0);
-                    * };
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
 
-                    * d3.selectAll("circle")
-                    *   .on("mouseover", tipMouseover)
-                    *   .on("mouseout", tipMouseout); */
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
                });
 
              // On click, Move each comment to their respective clusters
