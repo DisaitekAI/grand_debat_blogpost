@@ -408,7 +408,9 @@
                       .duration(animationStart)  // Length of animation
                       .each("start", function() {  // Start animation
                           d3.select(this)  // 'this' means the current element
-                          /* .attr("fill", "red")  // Change color */
+                            .attr("fill", function(d) {
+                                return colorScale(d.cluster_name);
+                            })
                             .attr("r", dotRadiusAnim);  // Change size
                       })
                       .delay(function(d, i) {
