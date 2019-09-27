@@ -30,8 +30,13 @@
          opacity: .3;
      }
 
-     h2, h4 {
+     h2 {
          text-align: center;
+     }
+
+     #animation_steps {
+         width: 20%;
+         margin: auto;
      }
 
      h4 {
@@ -55,10 +60,12 @@
 
     <body>
         <h2>Pouvez-vous identifier des règles que l'administration vous a déjà <br/> demandé d'appliquer et que vous avez jugées inutiles ou trop complexes ?</h2>
-        <h4 id="step_00">Raw comments</h4>
-        <h4 id="step_01">Analysing comment content</h4>
-        <h4 id="step_02">Grouping similar comment together</h4>
-        <h4 id="step_03">Separating the comment groups</h4>
+        <div id="animation_steps">
+            <h4 id="step_00">I. Raw comments</h4>
+            <h4 id="step_01">II. Analysing comment content</h4>
+            <h4 id="step_02">III. Grouping similar comment together</h4>
+            <h4 id="step_03">IV. Separating the comment groups</h4>
+        </div>
         <div id="vis-container"></div>
 
         <!-- Begin D3 Javascript -->
@@ -76,22 +83,38 @@
          });
 
          // Global animation variables
-         var colorScale       = d3.scale.category10();
-         var dotRadius        = 5;
-         var dotRadiusAnim    = 7;
-         var transitionColor  = "red";
+         var colorScale        = d3.scale.category10();
+         var dotRadius         = 5;
+         var dotRadiusAnim     = 7;
+         var transitionColor   = "red";
+         var activeStepColor   = "#5656f9";
+         var inactiveStepColor = "blue";
          // Transition easing - default 'variable' (i.e. has acceleration), also:
          // 'circle', 'elastic', 'bounce', 'linear'
-         var transitionEasing = "variable";
-         var animationStart   = 1500;
-         var animationEnd     = 1500;
-         var animationDelay   = 9000;
-
+         var transitionEasing  = "variable";
+         var animationStart    = 1500;
+         var animationEnd      = 1500;
+         var animationDelay    = 9000;
+         /* var animationStart   = 150;
+          * var animationEnd     = 150;
+          * var animationDelay   = 900;
+          */
          var makeViz = function(dataset) {
              // Setup settings for graphic
              var canvasWidth  = 1000;
              var canvasHeight = 600;
              var padding      = 30;  // for chart edges
+
+             // Changing the color of the active step
+             d3.selectAll("#step_01, #step_02, #step_03")
+               .style(
+                   "color", inactiveStepColor
+               );
+
+             d3.select("#step_00")
+               .style(
+                   "color", activeStepColor
+               );
 
              // Create scale functions
              var xScale = d3.scale.linear()  // xScale is width of graphic
@@ -163,6 +186,17 @@
 
              d3.select("#step_00")
                .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_01, #step_02, #step_03")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_00")
+                     .style(
+                         "color", activeStepColor
+                     );
+
                    // Update scale functions
                    xScale.domain([
                        d3.min(dataset, function(d) {
@@ -237,6 +271,17 @@
              // On click, move each comment to its TSNE position
              d3.select("#step_01")
                .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_00, #step_02, #step_03")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_01")
+                     .style(
+                         "color", activeStepColor
+                     );
+
                    // Update scale domains
                    xScale.domain([
                        d3.min(dataset, function(d) {
@@ -308,6 +353,17 @@
              // On click, display cluster colors
              d3.select("#step_02")
                .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_00, #step_01, #step_03")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_02")
+                     .style(
+                         "color", activeStepColor
+                     );
+
                    // Update scale domains
                    xScale.domain([
                        d3.min(dataset, function(d) {
@@ -383,6 +439,17 @@
              // On click, Move each comment to their respective clusters
              d3.select("#step_03")
                .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_00, #step_01, #step_02")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_03")
+                     .style(
+                         "color", activeStepColor
+                     );
+
                    // Update scale domains
                    xScale.domain([
                        d3.min(dataset, function(d) {
