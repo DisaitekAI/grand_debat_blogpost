@@ -55,6 +55,7 @@
 
     <body>
         <h2>Pouvez-vous identifier des règles que l'administration vous a déjà <br/> demandé d'appliquer et que vous avez jugées inutiles ou trop complexes ?</h2>
+        <h4 id="step_00">Raw comments</h4>
         <h4 id="step_01">Analysing comment content</h4>
         <h4 id="step_02">Grouping similar comment together</h4>
         <h4 id="step_03">Separating the comment groups</h4>
@@ -159,6 +160,79 @@
                 .attr("r", dotRadius)  // radius
                 .on("mouseover", tipMouseover)
                 .on("mouseout", tipMouseout);
+
+             d3.select("#step_00")
+               .on("click", function() {
+                   // Update scale functions
+                   xScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.init_x;  // input domain
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.init_x;  // input domain
+                       })
+                   ])
+                         .range([padding, canvasWidth - padding * 2]); // output range
+
+                   yScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.init_y;  // input domain
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.init_y;  // input domain
+                       })
+                   ])
+                         .range([canvasHeight - padding, padding]);  // remember y starts on top going down so we flip
+
+                   // Update circles
+                   svg.selectAll("circle")
+                      .data(dataset)  // Update with new data
+                      .transition()  // Transition from old to new
+                      .duration(animationStart)  // Length of animation
+                      .each("start", function() {  // Start animation
+                          d3.select(this)  // 'this' means the current element
+                            .attr("fill", transitionColor)  // Change color
+                            .attr("r", dotRadiusAnim);  // Change size
+                      })
+                      .delay(function(d, i) {
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
+                      })
+                      .ease(transitionEasing)
+                      .attr("cx", function(d) {
+                          return xScale(d.init_x);  // Circle's X
+                      })
+                      .attr("cy", function(d) {
+                          return yScale(d.init_y);  // Circle's Y
+                      })
+                      .each("end", function() {  // End animation
+                          d3.select(this)  // 'this' means the current element
+                            .transition()
+                            .duration(animationEnd)
+                            .attr("fill", "black")
+                            .attr("r", dotRadius);  // Change radius
+                      });
+
+                   function tipMouseover(d) {
+                       var html = "<b>" + d.comment + "</b>";
+
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
+
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
+
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
+               });
 
              // On click, move each comment to its TSNE position
              d3.select("#step_01")
