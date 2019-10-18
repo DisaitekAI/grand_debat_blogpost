@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import requests
 from collections import OrderedDict
+from collections import Counter
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import AgglomerativeClustering
@@ -134,6 +135,15 @@ comment_vectors_final   = np.concatenate(selected_vectors_list, axis = 0)
 clusters_final          = np.concatenate(selected_clusters_list, axis = 0)
 cluster_reprs           = np.array(cluster_reprs)
 
+cluster_counter         = Counter(clusters_final)
+cluster_sizes           = np.array(
+    [
+        cluster_counter[cluster_idx]
+        for cluster_idx in range(n_clusters)
+    ]
+)
+
+
 for cluster_id, cluster_comments in enumerate(selected_comments_list):
     print(f'#################### Cluster {cluster_id} -> {len(cluster_comments):4d} Elements ####################')
     for comment in cluster_comments.sample(10, replace = True, random_state = seed):
@@ -170,6 +180,8 @@ dim_red_coords = viz_algorithm().fit_transform(comment_vectors_final)
 df_dict = OrderedDict([
     ('comment'      , selected_comments_final),
     ('cluster_name' , cluster_reprs[clusters_final]),
+    ('cluster_size' , cluster_sizes[clusters_final]),
+    ('cluster_prop' , cluster_sizes[clusters_final] / len(clusters_final)),
     ('init_x'       , initial_coords[:, 0]),
     ('init_y'       , initial_coords[:, 1]),
     ('dim_red_x'    , dim_red_coords[:, 0]),
