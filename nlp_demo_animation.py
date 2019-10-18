@@ -206,4 +206,4 @@ df_dict = OrderedDict([
 df = pd.DataFrame.from_dict(df_dict)
 # df.to_csv('gd_animation_subset.csv', index = False)
 dest_fn = f'gd_animation_{cat_arg}_{question_id_arg}.csv'
-df.to_csv('gd_animation_fiscalite_11.csv', index = False)
+df.to_csv(dest_fn, index = False)
