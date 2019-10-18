@@ -78,7 +78,7 @@ pca             = PCA(n_components = variance_kept)
 comment_vectors = pca.fit_transform(comment_vectors)
 print(comment_vectors.shape)
 
-n_clusters = 6
+n_clusters = 9
 agglo      = AgglomerativeClustering(
     n_clusters = n_clusters,
     affinity   = 'cosine',
@@ -159,7 +159,7 @@ y_shift_scale  = 6
 cluster_shifts = np.array([
     (x * x_shift_scale, y * y_shift_scale)
     for x in [-1, 0, 1]
-    for y in [0, 1]
+    for y in [-1, 0, 1]
 ])
 figure_comment_coords = cluster_shifts[clusters_final] + cluster_coords
 
