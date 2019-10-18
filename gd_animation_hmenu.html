@@ -513,8 +513,7 @@
 
                    function tipMouseover(d) {
                        var color = colorScale(d.cluster_name);
-                       var html  = "<b> Cluster size: </b>" + d.cluster_size + "<br/>" +
-                                   "<b> Cluster proportion: </b>" + (100 * d.cluster_prop).toFixed(2) + "%<br/>" +
+                       var html  = "<b> Cluster size: </b>" + d.cluster_size + "(" +(100 * d.cluster_prop).toFixed(2) + "%)<br/>" +
                                    "<b> Cluster title: </b> <span style='color:" + color + ";'>"
                                  + d.cluster_name + "</span><br/>" + "<b>" + d.comment + "</b>";
 
