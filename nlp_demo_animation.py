@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import requests
 from collections import OrderedDict
 from collections import Counter
+import sys
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import AgglomerativeClustering
@@ -25,9 +26,22 @@ if download:
     with open('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv', 'wb') as csv_file:
         csv_file.write(req.content)
 
+cat_to_fn = {
+    'fiscalite': 'LA_FISCALITE_ET_LES_DEPENSES_PUBLIQUES.csv',
+    'democratie': 'DEMOCRATIE_ET_CITOYENNETE.csv',
+    'transition': 'LA_TRANSITION_ECOLOGIQUE.csv',
+    'organisation': 'ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv'
+}
+
+cat_arg = sys.argv[1]
+question_id_arg = int(sys.argv[2])
+dataset_filename = cat_to_fn[cat_arg]
+
 # Comments loading
-df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
-comments = df.iloc[:, 25]
+# df       = pd.read_csv('ORGANISATION_DE_LETAT_ET_DES_SERVICES_PUBLICS.csv')
+# comments = df.iloc[:, 25]
+df       = pd.read_csv(dataset_filename)
+comments = df.iloc[:, question_id_arg]
 print(len(comments))
 comments = comments.sample(30000, random_state = seed)
 
@@ -190,4 +204,5 @@ df_dict = OrderedDict([
     ('y'            , figure_comment_coords[:, 1]),
 ])
 df = pd.DataFrame.from_dict(df_dict)
-df.to_csv('gd_animation_subset.csv', index = False)
+# df.to_csv('gd_animation_subset.csv', index = False)
+df.to_csv('gd_animation_fiscalite_11.csv', index = False)
