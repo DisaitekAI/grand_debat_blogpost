@@ -34,6 +34,11 @@
          text-align: center;
      }
 
+     #navigation_menu {
+         float: left;
+         border: 1px solid red;
+     }
+
      #animation_steps {
          width: 100%;
          /* margin: auto; */
@@ -68,9 +73,12 @@
         <h2 id="question"></h2>
         <div id="navigation_menu">
             <ul>
-                <li id="question_01">Question 1</li>
-                <li id="question_02">Question 2</li>
-            </ul>
+                <li> Fiscalité
+                    <ul>
+                        <li id="question_01">Information impôts</li>
+                        <li id="question_02">Fiscalité juste et efficace</li>
+                    </ul>
+                </li>
         </div>
         <div id="animation_steps">
             <span id="step_00">Commentaires sans traitements</span> →
@@ -84,6 +92,8 @@
         <script type="text/javascript">
          /* d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) { */
          function questionClick(questionId) {
+             var activeQuestionColor   = "#438aff";
+             var inactiveQuestionColor = "blue";
              questionIdToParams = {
                  "01": {
                      "file": "./gd_animation_fiscalite_11.csv",
@@ -94,6 +104,13 @@
                      "text": "Que faudrait-il faire pour rendre la fiscalité plus juste et efficace ?"
                  }
              }
+
+             for (var qId in questionIdToParams) {
+                 d3.select("#question_" + qId)
+                   .style("color", inactiveQuestionColor);
+             }
+             d3.select("#question_" + questionId)
+               .style("color", activeQuestionColor);
 
              loadAndMakeViz(
                  questionIdToParams[questionId]["file"],
