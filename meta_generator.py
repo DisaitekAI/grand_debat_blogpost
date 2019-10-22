@@ -11,7 +11,7 @@ def main():
             45, 46, 47
         ],
         'transition': [
-
+            12, 14, 16, 17, 18, 20, 22, 25, 26
         ],
         'organisation': [
 
