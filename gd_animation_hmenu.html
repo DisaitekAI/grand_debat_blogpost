@@ -79,9 +79,10 @@
 
         <!-- Begin D3 Javascript -->
         <script type="text/javascript">
-         d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) {
-             data.forEach(function(d){
-                 d.x      = +d.x;
+         /* d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) { */
+         d3.csv('./gd_animation_fiscalite_12.csv', function loadCallback(error, data) {
+                 data.forEach(function(d){
+                     d.x      = +d.x;
                  d.y      = +d.y;
                  d.init_x = +d.init_x;
                  d.init_y = +d.init_y;
