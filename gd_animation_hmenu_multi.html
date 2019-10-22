@@ -83,25 +83,34 @@
         <!-- Begin D3 Javascript -->
         <script type="text/javascript">
          /* d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) { */
+         function questionClick(questionId) {
+             questionIdToParams = {
+                 "01": {
+                     "file": "./gd_animation_fiscalite_11.csv",
+                     "text": "Quelles sont toutes les choses qui pourraient être faites pour améliorer l'information des citoyens sur l'utilisation des impôts ?"
+                 },
+                 "02": {
+                     "file": "./gd_animation_fiscalite_12.csv",
+                     "text": "Que faudrait-il faire pour rendre la fiscalité plus juste et efficace ?"
+                 }
+             }
+
+             loadAndMakeViz(
+                 questionIdToParams[questionId]["file"],
+                 questionIdToParams[questionId]["text"]
+             )
+         }
+
          d3.select("#question_01")
            .on("click", function() {
-               loadAndMakeViz(
-                   "./gd_animation_fiscalite_11.csv",
-                   "Quelles sont toutes les choses qui pourraient être faites pour améliorer l'information des citoyens sur l'utilisation des impôts ?"
-               );
+               questionClick("01");
            });
          d3.select("#question_02")
            .on("click", function() {
-               loadAndMakeViz(
-                   "./gd_animation_fiscalite_12.csv",
-                   "Que faudrait-il faire pour rendre la fiscalité plus juste et efficace ?"
-               );
+               questionClick("02");
            });
 
-         loadAndMakeViz(
-             "./gd_animation_fiscalite_11.csv",
-             "Quelles sont toutes les choses qui pourraient être faites pour améliorer l'information des citoyens sur l'utilisation des impôts ?"
-         );
+         questionClick("01");
 
          function loadAndMakeViz(filename, questionText) {
              /* d3.csv('./gd_animation_fiscalite_12.csv', function loadCallback(error, data) { */
