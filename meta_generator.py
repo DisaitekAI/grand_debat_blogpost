@@ -3,10 +3,12 @@ from nlp_demo_animation_function import generate_csv_file
 def main():
     to_generate = {
         'fiscalite' : [
-            11, 12, 13,
+            11, 12, 13, 16, 17, 18
         ],
         'democratie': [
-
+            11, 14, 17, 20, 23, 26, 27, 30, 31, 32,
+            33, 34, 35, 36, 37, 38, 39, 40, 43, 44,
+            45, 46, 47
         ],
         'transition': [
 
