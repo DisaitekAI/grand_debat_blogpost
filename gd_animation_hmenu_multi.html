@@ -36,6 +36,13 @@
 
      #navigation_menu {
          float: left;
+         border: 1px solid blue;
+         margin-top: 10%;
+         margin-left: 30px;
+         font-size: 15pt;
+     }
+
+     #animation {
          border: 1px solid red;
      }
 
@@ -72,21 +79,29 @@
     <body>
         <h2 id="question"></h2>
         <div id="navigation_menu">
+            <h4>Question menu</h4>
             <ul>
                 <li> Fiscalité
                     <ul>
                         <li id="question_01">Information impôts</li>
                         <li id="question_02">Fiscalité juste et efficace</li>
+                        <li id="question_03">Impôts à baisser</li>
+                        <li id="question_04">Renforcement protection sociale</li>
+                        <li id="question_05">Payer plus d'impôts</li>
+                        <li id="question_06">Autre opinions sur les
+                        impôts et dépenses</li>
                     </ul>
                 </li>
         </div>
-        <div id="animation_steps">
-            <span id="step_00">Commentaires sans traitements</span> →
-            <span id="step_01">Cartographie sémantique</span> →
-            <span id="step_02">Regrouper les commentaires</span> →
-            <span id="step_03">Analyse des groupes de commentaires</span>
+        <div id="animation">
+            <div id="animation_steps">
+                <span id="step_00">Commentaires sans traitements</span> →
+                <span id="step_01">Cartographie sémantique</span> →
+                <span id="step_02">Regrouper les commentaires</span> →
+                <span id="step_03">Analyse des groupes de commentaires</span>
+            </div>
+            <div id="vis-container"></div>
         </div>
-        <div id="vis-container"></div>
 
         <!-- Begin D3 Javascript -->
         <script type="text/javascript">
@@ -102,7 +117,23 @@
                  "02": {
                      "file": "./gd_animation_fiscalite_12.csv",
                      "text": "Que faudrait-il faire pour rendre la fiscalité plus juste et efficace ?"
-                 }
+                 },
+                 "03": {
+                     "file": "./gd_animation_fiscalite_13.csv",
+                     "text": "Quels sont selon vous les impôts qu'il faut baisser en priorité ?"
+                 },
+                 "04": {
+                     "file": "./gd_animation_fiscalite_16.csv",
+                     "text": "Quels sont les domaines prioritaires où notre protection sociale doit être renforcée ?"
+                 },
+                 "05": {
+                     "file": "./gd_animation_fiscalite_17.csv",
+                     "text": "Pour quelle(s) politique(s) ou pour quels domaines d'action publique, seriez-vous prêts à payer plus d'impôts ?"
+                 },
+                 "06": {
+                     "file": "./gd_animation_fiscalite_18.csv",
+                     "text": "Y a-t-il d'autres points sur les impôts et les dépenses sur lesquels vous souhaiteriez vous exprimer ?"
+                 },
              }
 
              for (var qId in questionIdToParams) {
@@ -125,6 +156,22 @@
          d3.select("#question_02")
            .on("click", function() {
                questionClick("02");
+           });
+         d3.select("#question_03")
+           .on("click", function() {
+               questionClick("03");
+           });
+         d3.select("#question_04")
+           .on("click", function() {
+               questionClick("04");
+           });
+         d3.select("#question_05")
+           .on("click", function() {
+               questionClick("05");
+           });
+         d3.select("#question_06")
+           .on("click", function() {
+               questionClick("06");
            });
 
          questionClick("01");
