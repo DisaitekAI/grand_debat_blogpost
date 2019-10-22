@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tendances des réponses au Grand Débat</title>
+        <!-- Load D3 from site -->
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    </head>
+
+    <!-- CSS (Styling) -->
+    <style type="text/css">
+     /* Format X and Y Axis */
+     .axis path,
+     .axis line {
+         fill: none;
+         stroke: black;
+         shape-rendering: crispEdges;
+     }
+
+     .axis text {
+         font-family: sans-serif;
+         font-size: 11px;
+     }
+
+     .dot {
+         stroke: none;
+     }
+
+     circle {
+         opacity: .3;
+     }
+
+     h2 {
+         text-align: center;
+     }
+
+     #animation_steps {
+         width: 100%;
+         /* margin: auto; */
+         font-size: 15px;
+         text-align: center;
+     }
+
+     #step_00, #step_01, #step_02, #step_03  {
+         text-decoration: underline;
+     }
+
+     h4 {
+         text-decoration: underline;
+     }
+
+     #vis-container {
+         text-align: center;
+     }
+
+     .tooltip {
+         position: absolute;
+         font-size: 12px;
+         width:  auto;
+         height: auto;
+         pointer-events: none;
+         background-color: white;
+     }
+    </style>
+    <!-- End CSS (Styling) -->
+
+    <body>
+        <h2>Pouvez-vous identifier des règles que l'administration vous a déjà <br/> demandé d'appliquer et que vous avez jugées inutiles ou trop complexes ?</h2>
+        <!-- <div id="animation_steps">
+             <h4 id="step_00">I. Raw comments</h4>
+             <h4 id="step_01">II. Analysing comment content</h4>
+             <h4 id="step_02">III. Grouping similar comment together</h4>
+             <h4 id="step_03">IV. Separating the comment groups</h4>
+             </div> -->
+        <div id="animation_steps">
+            <span id="step_00">Commentaires sans traitements</span> → <span id="step_01">Cartographie sémantique</span> → <span id="step_02">Regrouper les commentaires</span> → <span id="step_03">Analyse des groupes de commentaires</span>
+        </div>
+        <div id="vis-container"></div>
+
+        <!-- Begin D3 Javascript -->
+        <script type="text/javascript">
+         /* d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) { */
+         d3.csv('./gd_animation_fiscalite_12.csv', function loadCallback(error, data) {
+                 data.forEach(function(d){
+                     d.x      = +d.x;
+                 d.y      = +d.y;
+                 d.init_x = +d.init_x;
+                 d.init_y = +d.init_y;
+                 d.dim_red_x = +d.dim_red_x;
+                 d.dim_red_y = +d.dim_red_y;
+             });
+             makeViz(data);
+         });
+
+         // Global animation variables
+         var colorScale        = d3.scale.category10();
+         var dotRadius         = 5;
+         var dotRadiusAnim     = 7;
+         var transitionColor   = "red";
+         /* var activeStepColor   = "#5656f9"; */
+         var activeStepColor   = "#438aff";
+         var inactiveStepColor = "blue";
+         // Transition easing - default 'variable' (i.e. has acceleration), also:
+         // 'circle', 'elastic', 'bounce', 'linear'
+         var transitionEasing  = "variable";
+         var animationStart    = 1500;
+         var animationEnd      = 1500;
+         var animationDelay    = 9000;
+         /* var animationStart   = 150;
+          * var animationEnd     = 150;
+          * var animationDelay   = 900;
+          */
+         var makeViz = function(dataset) {
+             // Setup settings for graphic
+             var canvasWidth  = 1000;
+             var canvasHeight = 600;
+             var padding      = 30;  // for chart edges
+
+             // Changing the color of the active step
+             d3.selectAll("#step_01, #step_02, #step_03")
+               .style(
+                   "color", inactiveStepColor
+               );
+
+             d3.select("#step_00")
+               .style(
+                   "color", activeStepColor
+               );
+
+             // Create scale functions
+             var xScale = d3.scale.linear()  // xScale is width of graphic
+                            .domain([
+                                d3.min(dataset, function(d) {
+                                    return d.init_x;  // input domain
+                                }),
+                                d3.max(dataset, function(d) {
+                                    return d.init_x;  // input domain
+                                })
+                            ])
+                            .range([padding, canvasWidth - padding * 2]); // output range
+
+             var yScale = d3.scale.linear()  // yScale is height of graphic
+                            .domain([
+                                d3.min(dataset, function(d) {
+                                    return d.init_y;  // input domain
+                                }),
+                                d3.max(dataset, function(d) {
+                                    return d.init_y;  // input domain
+                                })
+                            ])
+                            .range([canvasHeight - padding, padding]);  // remember y starts on top going down so we flip
+
+             // Create SVG element
+             var svg = d3.select("#vis-container")  // This is where we put our vis
+                         .append("svg")
+                         .attr("width", canvasWidth)
+                         .attr("height", canvasHeight);
+
+             // Create tooltip for mouseover
+             var tooltip = d3.select("#vis-container")
+                             .append("div")
+                             .attr("class", "tooltip")
+                             .style("opacity", 0.5);
+
+             function tipMouseover(d) {
+                 var html = "<b>" + d.comment + "</b>";
+
+                 tooltip.html(html)
+                        .style("left", (d3.event.pageX + 15) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", .9);
+             };
+
+             function tipMouseout(d) {
+                 tooltip.transition()
+                        .duration(300)
+                        .style("opacity", 0);
+             };
+
+             // Create Circles
+             svg.selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", function(d) {
+                    return xScale(d.init_x);  // Circle's X
+                })
+                .attr("cy", function(d) {  // Circle's Y
+                    return yScale(d.init_y);
+                })
+                .attr("r", dotRadius)  // radius
+                .on("mouseover", tipMouseover)
+                .on("mouseout", tipMouseout);
+
+             d3.select("#step_00")
+               .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_01, #step_02, #step_03")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_00")
+                     .style(
+                         "color", activeStepColor
+                     );
+
+                   // Update scale functions
+                   xScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.init_x;  // input domain
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.init_x;  // input domain
+                       })
+                   ])
+                         .range([padding, canvasWidth - padding * 2]); // output range
+
+                   yScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.init_y;  // input domain
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.init_y;  // input domain
+                       })
+                   ])
+                         .range([canvasHeight - padding, padding]);  // remember y starts on top going down so we flip
+
+                   // Update circles
+                   svg.selectAll("circle")
+                      .data(dataset)  // Update with new data
+                      .transition()  // Transition from old to new
+                      .duration(animationStart)  // Length of animation
+                      .each("start", function() {  // Start animation
+                          d3.select(this)  // 'this' means the current element
+                            .attr("fill", transitionColor)  // Change color
+                            .attr("r", dotRadiusAnim);  // Change size
+                      })
+                      .delay(function(d, i) {
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
+                      })
+                      .ease(transitionEasing)
+                      .attr("cx", function(d) {
+                          return xScale(d.init_x);  // Circle's X
+                      })
+                      .attr("cy", function(d) {
+                          return yScale(d.init_y);  // Circle's Y
+                      })
+                      .each("end", function() {  // End animation
+                          d3.select(this)  // 'this' means the current element
+                            .transition()
+                            .duration(animationEnd)
+                            .attr("fill", "black")
+                            .attr("r", dotRadius);  // Change radius
+                      });
+
+                   function tipMouseover(d) {
+                       var html = "<b>" + d.comment + "</b>";
+
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
+
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
+
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
+               });
+
+             // On click, move each comment to its TSNE position
+             d3.select("#step_01")
+               .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_00, #step_02, #step_03")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_01")
+                     .style(
+                         "color", activeStepColor
+                     );
+
+                   // Update scale domains
+                   xScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.dim_red_x;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.dim_red_x;
+                       })]
+                   )
+                   yScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.dim_red_y;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.dim_red_y;
+                       })
+                   ]);
+
+                   // Update circles
+                   svg.selectAll("circle")
+                      .data(dataset)  // Update with new data
+                      .transition()  // Transition from old to new
+                      .duration(animationStart)  // Length of animation
+                      .each("start", function() {  // Start animation
+                          d3.select(this)  // 'this' means the current element
+                            .attr("fill", transitionColor)  // Change color
+                            .attr("r", dotRadiusAnim);  // Change size
+                      })
+                      .delay(function(d, i) {
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
+                      })
+                      .ease(transitionEasing)
+                      .attr("cx", function(d) {
+                          return xScale(d.dim_red_x);  // Circle's X
+                      })
+                      .attr("cy", function(d) {
+                          return yScale(d.dim_red_y);  // Circle's Y
+                      })
+                      .each("end", function() {  // End animation
+                          d3.select(this)  // 'this' means the current element
+                            .transition()
+                            .duration(animationEnd)
+                            .attr("fill", "black")
+                            .attr("r", dotRadius);  // Change radius
+                      });
+
+                   function tipMouseover(d) {
+                       var html = "<b>" + d.comment + "</b>";
+
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
+
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
+
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
+               });
+
+             // On click, display cluster colors
+             d3.select("#step_02")
+               .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_00, #step_01, #step_03")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_02")
+                     .style(
+                         "color", activeStepColor
+                     );
+
+                   // Update scale domains
+                   xScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.dim_red_x;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.dim_red_x;
+                       })]
+                   )
+                   yScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.dim_red_y;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.dim_red_y;
+                       })
+                   ]);
+
+                   // Update circles
+                   svg.selectAll("circle")
+                      .data(dataset)  // Update with new data
+                      .transition()  // Transition from old to new
+                      .duration(animationStart)  // Length of animation
+                      .each("start", function() {  // Start animation
+                          d3.select(this)  // 'this' means the current element
+                            .attr("fill", transitionColor)  // Change color
+                            .attr("r", dotRadiusAnim);  // Change size
+                      })
+                      .delay(function(d, i) {
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
+                      })
+                      .ease(transitionEasing)
+                      .attr("cx", function(d) {
+                          return xScale(d.dim_red_x);  // Circle's X
+                      })
+                      .attr("cy", function(d) {
+                          return yScale(d.dim_red_y);  // Circle's Y
+                      })
+                      .each("end", function() {  // End animation
+                          d3.select(this)  // 'this' means the current element
+                            .transition()
+                            .duration(animationEnd)
+                            .attr("fill", function(d) {
+                                return colorScale(d.cluster_name);
+                            })
+                            .attr("r", dotRadius);  // Change radius
+                      });
+                   // .attr("fill", "black")  // Change color
+
+                   function tipMouseover(d) {
+                       var color = colorScale(d.cluster_name);
+                       var html  = "<b>  <span style='color:" + color + ";'>" + d.comment + "</span> </b>";
+
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
+
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
+
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
+               });
+
+             // On click, Move each comment to their respective clusters
+             d3.select("#step_03")
+               .on("click", function() {
+                   // Changing the color of the active step
+                   d3.selectAll("#step_00, #step_01, #step_02")
+                     .style(
+                         "color", inactiveStepColor
+                     );
+
+                   d3.select("#step_03")
+                     .style(
+                         "color", activeStepColor
+                     );
+
+                   // Update scale domains
+                   xScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.x;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.x;
+                       })]
+                   );
+                   yScale.domain([
+                       d3.min(dataset, function(d) {
+                           return d.y;
+                       }),
+                       d3.max(dataset, function(d) {
+                           return d.y;
+                       })
+                   ]);
+
+                   // Update circles
+                   svg.selectAll("circle")
+                      .data(dataset)  // Update with new data
+                      .transition()  // Transition from old to new
+                      .duration(animationStart)  // Length of animation
+                      .each("start", function() {  // Start animation
+                          d3.select(this)  // 'this' means the current element
+                            .attr("fill", function(d) {
+                                return colorScale(d.cluster_name);
+                            })
+                            .attr("r", dotRadiusAnim);  // Change size
+                      })
+                      .delay(function(d, i) {
+                          return i / dataset.length * animationDelay;  // Dynamic delay (i.e. each item delays a little longer)
+                      })
+                      .ease(transitionEasing)
+                      .attr("cx", function(d) {
+                          return xScale(d.x);  // Circle's X
+                      })
+                      .attr("cy", function(d) {
+                          return yScale(d.y);  // Circle's Y
+                      })
+                      .each("end", function() {  // End animation
+                          d3.select(this)  // 'this' means the current element
+                            .transition()
+                            .duration(animationEnd)
+                            .attr("fill", function(d) {
+                                return colorScale(d.cluster_name);
+                            })
+                            .attr("r", dotRadius);  // Change radius
+                      });
+                   // .attr("fill", "black")  // Change color
+
+                   function tipMouseover(d) {
+                       var color = colorScale(d.cluster_name);
+                       var html  = "<b> Cluster size: </b>" + d.cluster_size + "(" +(100 * d.cluster_prop).toFixed(2) + "%)<br/>" +
+                                   "<b> Cluster title: </b> <span style='color:" + color + ";'>"
+                                 + d.cluster_name + "</span><br/>" + "<b>" + d.comment + "</b>";
+
+                       tooltip.html(html)
+                              .style("left", (d3.event.pageX + 15) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px")
+                              .transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                   };
+
+                   function tipMouseout(d) {
+                       tooltip.transition()
+                              .duration(300)
+                              .style("opacity", 0);
+                   };
+
+                   d3.selectAll("circle")
+                     .on("mouseover", tipMouseover)
+                     .on("mouseout", tipMouseout);
+               });
+         };
+        </script>
+    </body>
+</html>
