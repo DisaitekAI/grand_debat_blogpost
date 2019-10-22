@@ -65,32 +65,58 @@
     <!-- End CSS (Styling) -->
 
     <body>
-        <h2>Pouvez-vous identifier des règles que l'administration vous a déjà <br/> demandé d'appliquer et que vous avez jugées inutiles ou trop complexes ?</h2>
-        <!-- <div id="animation_steps">
-             <h4 id="step_00">I. Raw comments</h4>
-             <h4 id="step_01">II. Analysing comment content</h4>
-             <h4 id="step_02">III. Grouping similar comment together</h4>
-             <h4 id="step_03">IV. Separating the comment groups</h4>
-             </div> -->
+        <h2 id="question"></h2>
+        <div id="navigation_menu">
+            <ul>
+                <li id="question_01">Question 1</li>
+                <li id="question_02">Question 2</li>
+            </ul>
+        </div>
         <div id="animation_steps">
-            <span id="step_00">Commentaires sans traitements</span> → <span id="step_01">Cartographie sémantique</span> → <span id="step_02">Regrouper les commentaires</span> → <span id="step_03">Analyse des groupes de commentaires</span>
+            <span id="step_00">Commentaires sans traitements</span> →
+            <span id="step_01">Cartographie sémantique</span> →
+            <span id="step_02">Regrouper les commentaires</span> →
+            <span id="step_03">Analyse des groupes de commentaires</span>
         </div>
         <div id="vis-container"></div>
 
         <!-- Begin D3 Javascript -->
         <script type="text/javascript">
          /* d3.csv('./gd_animation_subset.csv', function loadCallback(error, data) { */
-         d3.csv('./gd_animation_fiscalite_12.csv', function loadCallback(error, data) {
+         d3.select("#question_01")
+           .on("click", function() {
+               loadAndMakeViz(
+                   "./gd_animation_fiscalite_11.csv",
+                   "Quelles sont toutes les choses qui pourraient être faites pour améliorer l'information des citoyens sur l'utilisation des impôts ?"
+               );
+           });
+         d3.select("#question_02")
+           .on("click", function() {
+               loadAndMakeViz(
+                   "./gd_animation_fiscalite_12.csv",
+                   "Que faudrait-il faire pour rendre la fiscalité plus juste et efficace ?"
+               );
+           });
+
+         loadAndMakeViz(
+             "./gd_animation_fiscalite_11.csv",
+             "Quelles sont toutes les choses qui pourraient être faites pour améliorer l'information des citoyens sur l'utilisation des impôts ?"
+         );
+
+         function loadAndMakeViz(filename, questionText) {
+             /* d3.csv('./gd_animation_fiscalite_12.csv', function loadCallback(error, data) { */
+             d3.csv(filename, function loadCallback(error, data) {
                  data.forEach(function(d){
                      d.x      = +d.x;
-                 d.y      = +d.y;
-                 d.init_x = +d.init_x;
-                 d.init_y = +d.init_y;
-                 d.dim_red_x = +d.dim_red_x;
-                 d.dim_red_y = +d.dim_red_y;
+                     d.y      = +d.y;
+                     d.init_x = +d.init_x;
+                     d.init_y = +d.init_y;
+                     d.dim_red_x = +d.dim_red_x;
+                     d.dim_red_y = +d.dim_red_y;
+                 });
+                 makeViz(data, questionText);
              });
-             makeViz(data);
-         });
+         }
 
          // Global animation variables
          var colorScale        = d3.scale.category10();
@@ -110,7 +136,9 @@
           * var animationEnd     = 150;
           * var animationDelay   = 900;
           */
-         var makeViz = function(dataset) {
+         var makeViz = function(dataset, questionText) {
+             d3.select("#question")
+               .html(questionText);
              // Setup settings for graphic
              var canvasWidth  = 1000;
              var canvasHeight = 600;
@@ -149,6 +177,11 @@
                                 })
                             ])
                             .range([canvasHeight - padding, padding]);  // remember y starts on top going down so we flip
+
+             d3.select("#vis-container")
+               .selectAll("*")
+               .remove();
+
 
              // Create SVG element
              var svg = d3.select("#vis-container")  // This is where we put our vis
