@@ -83,10 +83,10 @@
             <ul>
                 <li> Fiscalité
                     <ul>
-                        <li id="question_01">Information impôts</li>
+                        <li id="question_01">Information sur les impôts</li>
                         <li id="question_02">Fiscalité juste et efficace</li>
                         <li id="question_03">Impôts à baisser</li>
-                        <li id="question_04">Renforcement protection sociale</li>
+                        <li id="question_04">Renforcement de la protection sociale</li>
                         <li id="question_05">Payer plus d'impôts</li>
                         <li id="question_06">Autre opinions sur les
                         impôts et dépenses</li>
@@ -112,7 +112,7 @@
              questionIdToParams = {
                  "01": {
                      "file": "./gd_animation_fiscalite_11.csv",
-                     "text": "Quelles sont toutes les choses qui pourraient être faites pour améliorer l'information des citoyens sur l'utilisation des impôts ?"
+                     "text": "Quelles sont toutes les choses qui pourraient être faites<br/>pour améliorer l'information des citoyens sur l'utilisation des impôts ?"
                  },
                  "02": {
                      "file": "./gd_animation_fiscalite_12.csv",
@@ -128,11 +128,11 @@
                  },
                  "05": {
                      "file": "./gd_animation_fiscalite_17.csv",
-                     "text": "Pour quelle(s) politique(s) ou pour quels domaines d'action publique, seriez-vous prêts à payer plus d'impôts ?"
+                     "text": "Pour quelle(s) politique(s) ou pour quels domaines d'action publique,<br/>seriez-vous prêts à payer plus d'impôts ?"
                  },
                  "06": {
                      "file": "./gd_animation_fiscalite_18.csv",
-                     "text": "Y a-t-il d'autres points sur les impôts et les dépenses sur lesquels vous souhaiteriez vous exprimer ?"
+                     "text": "Y a-t-il d'autres points sur les impôts et les dépenses<br/>sur lesquels vous souhaiteriez vous exprimer ?"
                  },
              }
 
@@ -149,31 +149,13 @@
              )
          }
 
-         d3.select("#question_01")
-           .on("click", function() {
-               questionClick("01");
-           });
-         d3.select("#question_02")
-           .on("click", function() {
-               questionClick("02");
-           });
-         d3.select("#question_03")
-           .on("click", function() {
-               questionClick("03");
-           });
-         d3.select("#question_04")
-           .on("click", function() {
-               questionClick("04");
-           });
-         d3.select("#question_05")
-           .on("click", function() {
-               questionClick("05");
-           });
-         d3.select("#question_06")
-           .on("click", function() {
-               questionClick("06");
-           });
-
+         for (let i = 1; i < 7; i++) {
+             let qId = i.toString().padStart(2, "0");
+             d3.select("#question_" + qId)
+               .on("click", function() {
+                   questionClick(qId);
+               });
+         }
          questionClick("01");
 
          function loadAndMakeViz(filename, questionText) {
