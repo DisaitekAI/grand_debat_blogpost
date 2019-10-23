@@ -131,12 +131,22 @@ def generate_csv_file(cat_arg, question_id_arg):
         cluster_reprs.append(cluster_repr)
         # To clean the comments that we will display, we cut from each cluster
         # the comments that are the furthest away from the center
-        cutoff_value = np.quantile(dist_to_center, quantile_cutoff)
-        comment_mask = dist_to_center <= cutoff_value
-        selected_comments_list.append(cluster_comments.iloc[comment_mask])
-        selected_vectors_list.append(cluster_vectors[comment_mask])
+        # -> Old code using quantile, changed because of very uniform clusters
+        # such as "Non" or "Aucun"
+        # cutoff_value = np.quantile(dist_to_center, quantile_cutoff)
+        # comment_mask = dist_to_center <= cutoff_value
+        comments_idx_by_dist_to_center = np.argsort(dist_to_center)
+        selected_comments_indices = comments_idx_by_dist_to_center[
+            :round(quantile_cutoff * len(dist_to_center))
+        ]
+        selected_comments = cluster_comments.iloc[selected_comments_indices]
+        # selected_comments_list.append(cluster_comments[comment_mask])
+        selected_comments_list.append(selected_comments)
+        # selected_vectors_list.append(cluster_vectors[comment_mask])
+        # selected_vectors_list.append(cluster_vectors.iloc[selected_comments_indices])
+        selected_vectors_list.append(cluster_vectors[selected_comments_indices])
         selected_clusters_list.append(np.array([cluster_id] * len(selected_comments_list[-1])))
-        print(cluster_repr, cutoff_value)
+        print(len(selected_comments_list[-1]), cluster_repr)
 
     selected_comments_final = pd.concat(selected_comments_list)
     comment_vectors_final   = np.concatenate(selected_vectors_list, axis = 0)
