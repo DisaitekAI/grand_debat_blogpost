@@ -37,12 +37,13 @@ def generate_csv_file(cat_arg, question_id_arg):
     df       = pd.read_csv(dataset_filename)
     comments = df.iloc[:, question_id_arg]
     print(len(comments))
-    comments = comments.sample(30000, random_state = seed)
 
     # Comments cleaning and selection
     empty_comments = comments.isnull()
     print(empty_comments.sum() / len(comments))
     comments       = comments[~empty_comments]
+
+    comments = comments.sample(60000, random_state = seed)
 
     # Removing long comments
     # Computes for each comment its number of character.
