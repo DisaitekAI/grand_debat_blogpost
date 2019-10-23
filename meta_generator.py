@@ -2,7 +2,7 @@ from nlp_demo_animation_function import generate_csv_file
 
 def main():
     to_generate = {
-        'fiscalite' : [
+        'fiscalite': [
             11, 12, 13, 16, 17, 18
         ],
         'democratie': [
@@ -14,7 +14,9 @@ def main():
             12, 14, 16, 17, 18, 20, 22, 25, 26
         ],
         'organisation': [
-
+            11, 15, 16, 20, 21, 25, 29, 30, 31, 32,
+            33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+            43
         ],
     }
 
