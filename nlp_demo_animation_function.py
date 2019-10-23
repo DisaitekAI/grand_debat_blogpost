@@ -163,16 +163,17 @@ def generate_csv_file(cat_arg, question_id_arg):
     )
 
 
-    for cluster_id, cluster_comments in enumerate(selected_comments_list):
-        print(f'#################### Cluster {cluster_id} -> {len(cluster_comments):4d} Elements ####################')
-        for comment in cluster_comments.sample(10, replace = True, random_state = seed):
-            print(f'\t{comment}\n')
+    # for cluster_id, cluster_comments in enumerate(selected_comments_list):
+    #     print(f'#################### Cluster {cluster_id} -> {len(cluster_comments):4d} Elements ####################')
+    #     for comment in cluster_comments.sample(3, replace = True, random_state = seed):
+    #         print(f'\t{comment}\n')
 
     viz_algorithm = TSNE
     # viz_algorithm = umap.UMAP
 
     cluster_coords = []
     for cluster_id in range(n_clusters):
+        print(f'Computing TSNE positions for cluster {cluster_id}')
         cluster_vects     = comment_vectors_final[clusters_final == cluster_id]
         cluster_vects_viz = viz_algorithm().fit_transform(cluster_vects)
         viz_mean          = cluster_vects_viz.mean(axis = 0)
