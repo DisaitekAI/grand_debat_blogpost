@@ -132,6 +132,33 @@
                         <li id="question_38">Autres opinions sur la transition écologique</li>
                     </ul>
                 </li>
+                <li>
+                    Organisation de l'État et des services publics
+                    <ul>
+                        <li id="question_39">Opinion sur l'organisation de l'État</li>
+                        <li id="question_40">Renforcement des services publics</li>
+                        <li id="question_41">Services sur internet</li>
+                        <li id="question_42">Évolution des services publics</li>
+                        <li id="question_43">Services à faire évoluer</li>
+                        <li id="question_44">Règle complexes ou inutiles</li>
+                        <li id="question_45">Revoir le fonctionnement de l'administration</li>
+                        <li id="question_46">Amélioration des collectivités territoriales</li>
+                        <li id="question_47">Administration des formations</li>
+                        <li id="question_48">Administration de la scolarisation</li>
+                        <li id="question_49">Admnistration de la recherche d'emploi</li>
+                        <li id="question_50">Administration de la retraite</li>
+                        <li id="question_51">Administration des remboursements santé</li>
+                        <li id="question_52">Admnistration des situations de handicap</li>
+                        <li id="question_53">Administration des entreprises</li>
+                        <li id="question_54">Administration du recrutement</li>
+                        <li id="question_55">Administration de la formation du personnel</li>
+                        <li id="question_56">Administration de la rémunération du personnel</li>
+                        <li id="question_57">Administration de fin d'activité</li>
+                        <li id="question_58">Administration du recrutement de personne handicapée</li>
+                        <li id="question_59">Autres opinions sur l'organisation de l'État et des services publics</li>
+                    </ul>
+                </li>
+            </ul>
         </div>
         <div id="animation">
             <h2 id="question"></h2>
@@ -316,59 +343,79 @@
                      "text": "Si vous n'estimez avoir accès aux services publics dont vous avez besoin, quels sont cexu qui manquent sur votre territoire et qu'il est nécessaire de renforcer ?"
                  },
                  "41": {
-                     "file": "./gd_animation_organisation_.csv",
+                     "file": "./gd_animation_organisation_16.csv",
+                     "text": "Quels nouveaux services ou quelles démarches souhaitez-vous voir développées sur Internet en priorité ?"
+                 },
+                 "42": {
+                     "file": "./gd_animation_organisation_20.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "43": {
+                     "file": "./gd_animation_organisation_21.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "44": {
+                     "file": "./gd_animation_organisation_25.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "45": {
+                     "file": "./gd_animation_organisation_29.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "46": {
+                     "file": "./gd_animation_organisation_30.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "47": {
+                     "file": "./gd_animation_organisation_31.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "48": {
+                     "file": "./gd_animation_organisation_32.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "49": {
+                     "file": "./gd_animation_organisation_33.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "50": {
+                     "file": "./gd_animation_organisation_34.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "51": {
+                     "file": "./gd_animation_organisation_35.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "52": {
+                     "file": "./gd_animation_organisation_36.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "53": {
+                     "file": "./gd_animation_organisation_37.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "54": {
+                     "file": "./gd_animation_organisation_38.csv",
                      "text": ""
                  },
-                 "": {
-                     "file": "./gd_animation_organisation_.csv",
+                 "55": {
+                     "file": "./gd_animation_organisation_39.csv",
+                     "text": ""
+                 },
+                 "56": {
+                     "file": "./gd_animation_organisation_40.csv",
+                     "text": ""
+                 },
+                 "57": {
+                     "file": "./gd_animation_organisation_41.csv",
+                     "text": ""
+                 },
+                 "58": {
+                     "file": "./gd_animation_organisation_42.csv",
+                     "text": ""
+                 },
+                 "59": {
+                     "file": "./gd_animation_organisation_43.csv",
                      "text": ""
                  },
              }
@@ -386,7 +433,7 @@
              )
          }
 
-         for (let i = 1; i < 39; i++) {
+         for (let i = 1; i < 60; i++) {
              let qId = i.toString().padStart(2, "0");
              d3.select("#question_" + qId)
                .on("click", function() {
