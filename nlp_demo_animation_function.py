@@ -19,7 +19,7 @@ import umap
 seed = 142857
 download = False
 
-def generate_csv_file(cat_arg, question_id_arg):
+def generate_csv_file(cat_arg, question_id_arg, sample_size = None):
     cat_to_fn = {
         'fiscalite': 'LA_FISCALITE_ET_LES_DEPENSES_PUBLIQUES.csv',
         'democratie': 'DEMOCRATIE_ET_CITOYENNETE.csv',
@@ -43,7 +43,8 @@ def generate_csv_file(cat_arg, question_id_arg):
     print(empty_comments.sum() / len(comments))
     comments       = comments[~empty_comments]
 
-    comments = comments.sample(60000, random_state = seed)
+    if sample_size and sample_size <= len(comments):
+        comments = comments.sample(sample_size, random_state = seed)
 
     # Removing long comments
     # Computes for each comment its number of character.
