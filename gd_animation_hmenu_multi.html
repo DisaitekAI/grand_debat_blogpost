@@ -5,6 +5,7 @@
         <title>Tendances des réponses au Grand Débat</title>
         <!-- Load D3 from site -->
         <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script type ="text/javascript" src="ul.js"></script>
     </head>
 
     <!-- CSS (Styling) -->
@@ -73,15 +74,23 @@
          pointer-events: none;
          background-color: white;
      }
+
+     .col_ul {
+         list-style-image: url('button-closed.png');
+     }
+
+     ul li ul {
+         list-style-type: square;
+     }
     </style>
     <!-- End CSS (Styling) -->
 
     <body>
         <div id="navigation_menu">
             <h4>Question menu</h4>
-            <ul>
-                <li> Fiscalité et dépenses publiques
-                    <ul>
+            <ul class ="col_ul">
+                <li> <span>Fiscalité et dépenses publiques</span>
+                    <ul class="normal_list">
                         <li id="question_01">Information sur les impôts</li>
                         <li id="question_02">Fiscalité juste et efficace</li>
                         <li id="question_03">Impôts à baisser</li>
@@ -91,8 +100,8 @@
                         impôts et dépenses</li>
                     </ul>
                 </li>
-                <li> Démocratie et citoyenneté
-                    <ul>
+                <li> <span>Démocratie et citoyenneté</span>
+                    <ul class="normal_list">
                         <li id="question_07">Confiance aux représentants</li>
                         <li id="question_08">Renouer le lien avec les élus</li>
                         <li id="question_09">Représenter les sensibilités politiques</li>
@@ -119,8 +128,8 @@
                     </ul>
                 </li>
                 <li>
-                    Transition écologique
-                    <ul>
+                    <span>Transition écologique</span>
+                    <ul class="normal_list">
                         <li id="question_30">Solution environnementales</li>
                         <li id="question_31">Impact du changement climatique</li>
                         <li id="question_32">Action pour protéger l'environnement</li>
@@ -133,8 +142,8 @@
                     </ul>
                 </li>
                 <li>
-                    Organisation de l'État et des services publics
-                    <ul>
+                    <span>Organisation de l'État et des services publics</span>
+                    <ul class="normal_list">
                         <li id="question_39">Opinion sur l'organisation de l'État</li>
                         <li id="question_40">Renforcement des services publics</li>
                         <li id="question_41">Services sur internet</li>
